@@ -16,3 +16,4 @@ This is a simple shopping list application built with React Native.
 - [x] Implement settings screen
 - [x] Implement theme switching (Light, Dark, Solar, Mono)
 - [x] Implement localization (en, ru, sp, de, fr, por, jp, ch, ko, ua)
+- [x] Enhance the UI with react-native-paper

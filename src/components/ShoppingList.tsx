@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { ThemeContext } from '../ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { TextInput, Button, Text } from 'react-native-paper';
 
 const ShoppingList = () => {
   const { theme } = useContext(ThemeContext);
@@ -37,24 +38,8 @@ const ShoppingList = () => {
     },
     input: {
       flex: 1,
-      height: 40,
-      borderColor: theme.primary,
-      borderWidth: 1,
       marginRight: 10,
-      paddingHorizontal: 10,
-      borderRadius: 5,
       backgroundColor: theme.background,
-      color: theme.text,
-    },
-    addButton: {
-      backgroundColor: theme.primary,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 5,
-    },
-    addButtonText: {
-      color: '#fff',
-      fontWeight: 'bold',
     },
     item: {
       fontSize: 18,
@@ -70,15 +55,15 @@ const ShoppingList = () => {
       <Text style={styles.title}>{t('shopping_list')}</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
-          placeholder={t('enter_item')}
-          placeholderTextColor={theme.text}
+          label={t('enter_item')}
           value={item}
           onChangeText={setItem}
+          mode="outlined"
+          style={styles.input}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addItem}>
-          <Text style={styles.addButtonText}>{t('add')}</Text>
-        </TouchableOpacity>
+        <Button mode="contained" onPress={addItem}>
+          {t('add')}
+        </Button>
       </View>
       <FlatList
         data={items}
