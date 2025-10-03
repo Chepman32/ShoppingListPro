@@ -1,23 +1,39 @@
-import React, { createContext, useState, useMemo } from 'react';
-import { themes } from './themes';
+/**
+ * Theme Context and Provider
+ * Manages theme switching across the app
+ */
 
-export const ThemeContext = createContext({
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import { themes, ThemeMode, ThemeColors } from './theme/themes';
+import { useSettingsStore } from './stores';
+
+interface ThemeContextValue {
+  theme: ThemeColors;
+  themeMode: ThemeMode;
+  setTheme: (mode: ThemeMode) => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue>({
   theme: themes.light,
-  toggleTheme: (themeName: string) => {},
+  themeMode: 'light',
+  setTheme: () => {},
 });
 
-export const ThemeProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState('light');
+export const useTheme = () => useContext(ThemeContext);
 
-  const toggleTheme = (name: string) => {
-    setThemeName(name);
-  };
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { themeMode, setThemeMode } = useSettingsStore();
 
-  const theme = useMemo(() => themes[themeName], [themeName]);
+  const theme = useMemo(() => themes[themeMode], [themeMode]);
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({
+      theme,
+      themeMode,
+      setTheme: setThemeMode,
+    }),
+    [theme, themeMode, setThemeMode]
   );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

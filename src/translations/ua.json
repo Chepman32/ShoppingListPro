@@ -1,9 +1,6 @@
 {
-  "shopping_list": "Список покупок",
-  "settings": "Налаштування",
-  "enter_item": "Введіть товар",
-  "add": "Додати",
-  "theme": "Тема",
-  "sound": "Звук",
-  "haptics": "Вібрація"
+  "common": {"add": "Додати","edit": "Редагувати","delete": "Видалити","cancel": "Скасувати","save": "Зберегти","done": "Готово","back": "Назад","search": "Пошук","loading": "Завантаження..."},
+  "settings": {"title": "Налаштування","appearance": {"title": "Зовнішній вигляд","theme": "Тема","language": "Мова","selectTheme": "Виберіть тему","selectLanguage": "Виберіть мову"},"behavior": {"title": "Поведінка","haptics": "Вібрація","sound": "Звукові ефекти"},"about": {"title": "Про додаток","version": "Версія"}},
+  "templates": {"title": "Шаблони","myTemplates": "Мої шаблони","predefinedTemplates": "Готові шаблони","createNew": "Створити новий","noTemplates": "Немає користувацьких шаблонів","createFirst": "Створіть свій перший шаблон","items": "елементів","addToList": "Додати до списку покупок"},
+  "lists": {"title": "Ваші списки","newList": "Новий список","noLists": "Немає списків","createFirst": "Натисніть +, щоб створити перший список"}
 }

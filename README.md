@@ -1,157 +1,107 @@
-# ListFlow - Premium Shopping List App
+# ShoppingListPro
 
-A production-ready, offline-first shopping list application built with React Native, featuring beautiful animations, intelligent organization, and premium features.
+A premium React Native shopping list application with advanced features including templates, multi-language support, theming, and offline-first architecture.
 
-## 🎯 Features
+## 📱 Project Overview
 
-### Core Features (Free)
-- ✅ Unlimited shopping lists with custom icons and colors
-- ✅ Smart item management with categories
-- ✅ Beautiful animations powered by Reanimated 3 & Skia
-- ✅ Shopping Mode for in-store use
-- ✅ 100% Offline functionality
-- ✅ Multi-language support (10 languages)
-- ✅ Dark/Light theme with custom themes
+**ShoppingListPro** (formerly ListFlow) is a comprehensive shopping list management app built with React Native. The app provides an intuitive interface for creating, managing, and organizing shopping lists with support for templates, categories, pantry management, and recipe integration.
 
-### Premium Features
-- ⭐ Pantry Management with expiry tracking
-- ⭐ Recipe storage and ingredient integration
-- ⭐ Barcode scanner
-- ⭐ Smart suggestions based on history
-- ⭐ Shopping analytics
-- ⭐ Advanced customization
+### Key Features
 
-## 🏗️ Architecture
+- ✅ **Multi-List Management** - Create and manage multiple shopping lists simultaneously
+- ✅ **Templates System** - Pre-defined and custom templates for quick list creation
+- ✅ **Theming** - 4 beautiful themes (Light, Dark, Solar, Mono)
+- ✅ **Multi-Language** - Support for 10 languages (EN, RU, ES, DE, FR, PT, JP, ZH, KO, UK)
+- ✅ **Offline-First** - Full functionality without internet connection using WatermelonDB
+- ✅ **Pantry Management** - Track pantry items with expiry dates
+- ✅ **Haptic & Sound Feedback** - Enhanced user experience with tactile and audio cues
+- ✅ **Recipe Integration** - Link recipes to shopping lists
 
-### Tech Stack
-- **Framework**: React Native 0.81+
-- **Language**: TypeScript
-- **Database**: WatermelonDB (SQLite)
-- **State Management**: Zustand
-- **Animations**: React Native Reanimated 3, Skia
-- **Navigation**: React Navigation 6
-- **Storage**: MMKV for preferences
-- **UI**: Custom components with React Native Paper
+## 🏗️ Technical Stack
 
-### Project Structure
+### Core Technologies
+- **React Native** (0.81.4) - Cross-platform mobile framework
+- **TypeScript** - Type-safe development
+- **WatermelonDB** - Offline-first reactive database
+- **Zustand** - State management
+- **React Navigation** - Navigation and routing
+- **i18next** - Internationalization
+
+### UI & Design
+- **React Native Reanimated** - Smooth animations
+- **React Native Gesture Handler** - Touch gestures
+- **React Native Safe Area Context** - Handle device notches
+- **FlashList** - High-performance lists
+
+## 📂 Project Structure
+
 ```
-src/
-├── animations/     # Reanimated & Skia animations
-├── components/     # Reusable UI components
-├── database/       # WatermelonDB models & schemas
-├── hooks/          # Custom React hooks
-├── navigation/     # Navigation configuration
-├── screens/        # Screen components
-├── services/       # Business logic
-├── stores/         # Zustand stores
-├── theme/          # Design tokens
-├── types/          # TypeScript types
-└── utils/          # Utility functions
+ShoppingListPro/
+├── src/
+│   ├── components/        # Reusable UI components
+│   ├── database/         # WatermelonDB models and schemas
+│   ├── navigation/       # Navigation configuration
+│   ├── screens/          # Screen components
+│   ├── stores/           # Zustand state stores
+│   ├── theme/            # Theme system and design tokens
+│   ├── translations/     # i18n translation files
+│   └── types/            # TypeScript type definitions
+├── ios/                  # iOS native code
+├── android/              # Android native code
+└── App.tsx              # Main app entry point
 ```
+
+## 🎨 Themes
+
+The app supports 4 distinct themes:
+
+1. **Light** - Classic clean interface
+2. **Dark** - Easy on the eyes  
+3. **Solar** - Warm yellow shades
+4. **Mono** - Grayscale design
+
+## 🌍 Supported Languages
+
+🇬🇧 English | 🇷🇺 Russian | 🇪🇸 Spanish | 🇩🇪 German | 🇫🇷 French | 🇧🇷 Portuguese | 🇯🇵 Japanese | 🇨🇳 Chinese | 🇰🇷 Korean | 🇺🇦 Ukrainian
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 20+
-- Xcode 15+ (for iOS)
+- Node.js >= 20.19.4
+- npm or yarn
+- Xcode (for iOS)
 - CocoaPods
 
 ### Installation
 
-1. Install dependencies:
-```bash
-yarn install
-```
-
-2. Install iOS dependencies:
-```bash
+\`\`\`bash
+npm install
 cd ios && pod install && cd ..
-```
+npm run ios
+\`\`\`
 
-3. Run the app:
-```bash
-# iOS
-yarn ios
+## 📋 Development Tasks
 
-# Android (not configured yet)
-yarn android
-```
+### ✅ Completed
+- [x] Theme system (4 variants)
+- [x] Multi-language support (10 languages)
+- [x] Settings screen with theme/sound/haptics
+- [x] Template system with predefined templates
+- [x] Navigation structure
+- [x] Database setup
+- [x] Lists management
+- [x] Safe area handling
 
-## 📱 Screens
-
-1. **Splash Screen** - Physics-based particle animation
-2. **Onboarding** - 4-screen flow for first-time users
-3. **Home Screen** - List overview with animations
-4. **List Detail** - Item management with gestures
-5. **Shopping Mode** - Full-screen mode for in-store use
-6. **Pantry** - Track items at home (Premium)
-7. **Recipes** - Store and manage recipes (Premium)
-8. **Settings** - App configuration
-
-## 🎨 Design System
-
-All design tokens are defined in `src/theme/`:
-- **Colors**: Semantic color palette with dark mode
-- **Typography**: SF Pro-based scale
-- **Spacing**: Consistent 4px grid
-- **Shadows**: Elevation system
-- **Border Radius**: Rounded corner scale
-
-## 🔧 Configuration
-
-### Environment Variables
-None required - fully offline app
-
-### Settings
-- Theme: Light/Dark/Auto
-- Haptics: On/Off
-- Language: 10 languages supported
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-yarn test
-
-# Type checking
-yarn tsc --noEmit
-
-# Linting
-yarn lint
-```
-
-## 📦 Build & Deployment
-
-### iOS Build
-```bash
-cd ios
-bundle exec fastlane beta  # TestFlight
-bundle exec fastlane release  # App Store
-```
-
-## 🔒 Privacy
-
-- **100% Offline** - No data sent to servers
-- **Local Storage** - All data stays on device
-- **No Tracking** - Zero analytics/telemetry
-- **No Accounts** - No sign-up required
-
-## 📄 License
-
-Proprietary - All rights reserved
-
-## 🙏 Credits
-
-Built with:
-- React Native
-- WatermelonDB
-- Zustand
-- React Native Reanimated
-- React Native Skia
-- And many other amazing open-source libraries
+### 📝 TODO
+- [ ] Shopping mode implementation
+- [ ] Item management in lists
+- [ ] Budget tracking
+- [ ] Price history
+- [ ] Barcode scanning
+- [ ] Share functionality
+- [ ] Cloud sync
 
 ---
 
-**Version**: 1.0.0
-**Platform**: iOS (Primary)
-**Status**: Production Ready ✅
+**Version:** 1.0.0  
+**Last Updated:** 2025-10-03

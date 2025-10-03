@@ -7,6 +7,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { MMKV } from 'react-native-mmkv';
+import { ThemeMode } from '../theme/themes';
 
 // Initialize MMKV storage
 const storage = new MMKV();
@@ -25,9 +26,12 @@ const mmkvStorage = {
   },
 };
 
+export type Language = 'en' | 'ru' | 'sp' | 'de' | 'fr' | 'por' | 'jp' | 'ch' | 'ko' | 'ua';
+
 interface SettingsState {
   // Appearance
-  theme: 'light' | 'dark' | 'auto';
+  themeMode: ThemeMode;
+  language: Language;
   hapticsEnabled: boolean;
   soundEnabled: boolean;
 
@@ -45,6 +49,10 @@ interface SettingsState {
   hasCompletedOnboarding: boolean;
 
   // Actions
+  setThemeMode: (mode: ThemeMode) => void;
+  setLanguage: (lang: Language) => void;
+  toggleHaptics: () => void;
+  toggleSound: () => void;
   updateSettings: (updates: Partial<SettingsState>) => void;
   completeOnboarding: () => void;
 }
@@ -53,7 +61,8 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       // Default values
-      theme: 'auto',
+      themeMode: 'light',
+      language: 'en',
       hapticsEnabled: true,
       soundEnabled: false,
       defaultListIcon: '🛒',
@@ -63,6 +72,22 @@ export const useSettingsStore = create<SettingsState>()(
       currency: 'USD',
       units: 'imperial',
       hasCompletedOnboarding: false,
+
+      setThemeMode: (mode) => {
+        set({ themeMode: mode });
+      },
+
+      setLanguage: (lang) => {
+        set({ language: lang });
+      },
+
+      toggleHaptics: () => {
+        set((state) => ({ hapticsEnabled: !state.hapticsEnabled }));
+      },
+
+      toggleSound: () => {
+        set((state) => ({ soundEnabled: !state.soundEnabled }));
+      },
 
       updateSettings: (updates) => {
         set(updates);

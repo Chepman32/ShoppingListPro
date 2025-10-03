@@ -11,6 +11,7 @@ import { SplashScreen } from './src/screens/SplashScreen';
 import { OnboardingScreen } from './src/screens/onboarding/OnboardingScreen';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { useSettingsStore } from './src/stores';
+import { ThemeProvider } from './src/ThemeContext';
 import './src/i18n';
 
 type AppState = 'splash' | 'onboarding' | 'app';
@@ -34,23 +35,25 @@ function App() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        {appState === 'splash' && (
-          <SplashScreen onComplete={handleSplashComplete} />
-        )}
+    <ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          {appState === 'splash' && (
+            <SplashScreen onComplete={handleSplashComplete} />
+          )}
 
-        {appState === 'onboarding' && (
-          <OnboardingScreen onComplete={handleOnboardingComplete} />
-        )}
+          {appState === 'onboarding' && (
+            <OnboardingScreen onComplete={handleOnboardingComplete} />
+          )}
 
-        {appState === 'app' && (
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
-        )}
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+          {appState === 'app' && (
+            <NavigationContainer>
+              <AppNavigator />
+            </NavigationContainer>
+          )}
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ThemeProvider>
   );
 }
 

@@ -15,7 +15,11 @@ import { PantryScreen } from '../screens/pantry/PantryScreen';
 import { TemplatesScreen } from '../screens/templates/TemplatesScreen';
 import { TemplateDetailScreen } from '../screens/templates/TemplateDetailScreen';
 import { CreateTemplateScreen } from '../screens/templates/CreateTemplateScreen';
+import { MoreScreen } from '../screens/more/MoreScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
+import { FavoritesScreen } from '../screens/more/FavoritesScreen';
+import { StatsScreen } from '../screens/more/StatsScreen';
+import { AboutScreen } from '../screens/more/AboutScreen';
 import { colors } from '../theme';
 
 const Stack = createStackNavigator();
@@ -79,6 +83,27 @@ const TemplatesStack = () => {
   );
 };
 
+const MoreStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
+      }}
+    >
+      <Stack.Screen name="MoreHome" component={MoreScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Favorites" component={FavoritesScreen} />
+      <Stack.Screen name="Stats" component={StatsScreen} />
+      <Stack.Screen name="About" component={AboutScreen} />
+    </Stack.Navigator>
+  );
+};
+
 export const AppNavigator = () => {
   return (
     <Tab.Navigator
@@ -114,10 +139,10 @@ export const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
+        name="More"
+        component={MoreStack}
         options={{
-          tabBarIcon: createEmojiIcon('⚙️'),
+          tabBarIcon: createEmojiIcon('⋯'),
         }}
       />
     </Tab.Navigator>

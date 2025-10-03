@@ -1,9 +1,6 @@
 {
-  "shopping_list": "Lista de compras",
-  "settings": "Configurações",
-  "enter_item": "Digite o item",
-  "add": "Adicionar",
-  "theme": "Tema",
-  "sound": "Som",
-  "haptics": "Haptics"
+  "common": {"add": "Adicionar","edit": "Editar","delete": "Excluir","cancel": "Cancelar","save": "Salvar","done": "Concluído","back": "Voltar","search": "Pesquisar","loading": "Carregando..."},
+  "settings": {"title": "Configurações","appearance": {"title": "Aparência","theme": "Tema","language": "Idioma","selectTheme": "Selecionar tema","selectLanguage": "Selecionar idioma"},"behavior": {"title": "Comportamento","haptics": "Feedback tátil","sound": "Efeitos sonoros"},"about": {"title": "Sobre","version": "Versão"}},
+  "templates": {"title": "Modelos","myTemplates": "Meus modelos","predefinedTemplates": "Modelos predefinidos","createNew": "Criar novo","noTemplates": "Nenhum modelo personalizado","createFirst": "Crie seu primeiro modelo","items": "itens","addToList": "Adicionar à lista de compras"},
+  "lists": {"title": "Suas listas","newList": "Nova lista","noLists": "Nenhuma lista","createFirst": "Toque em + para criar sua primeira lista"}
 }

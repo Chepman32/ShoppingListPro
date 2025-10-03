@@ -1,9 +1,6 @@
 {
-  "shopping_list": "购物清单",
-  "settings": "设置",
-  "enter_item": "输入项目",
-  "add": "添加",
-  "theme": "主题",
-  "sound": "声音",
-  "haptics": "触觉"
+  "common": {"add": "添加","edit": "编辑","delete": "删除","cancel": "取消","save": "保存","done": "完成","back": "返回","search": "搜索","loading": "加载中..."},
+  "settings": {"title": "设置","appearance": {"title": "外观","theme": "主题","language": "语言","selectTheme": "选择主题","selectLanguage": "选择语言"},"behavior": {"title": "行为","haptics": "触觉反馈","sound": "音效"},"about": {"title": "关于","version": "版本"}},
+  "templates": {"title": "模板","myTemplates": "我的模板","predefinedTemplates": "预定义模板","createNew": "创建新模板","noTemplates": "还没有自定义模板","createFirst": "创建您的第一个模板","items": "项目","addToList": "添加到购物清单"},
+  "lists": {"title": "您的清单","newList": "新清单","noLists": "还没有清单","createFirst": "点击+创建您的第一个清单"}
 }

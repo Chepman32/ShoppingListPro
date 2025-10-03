@@ -43,9 +43,7 @@ export const HomeScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>ListFlow</Text>
-        <Pressable onPress={() => navigation.navigate('Settings' as never)}>
-          <Text style={styles.settingsIcon}>⚙️</Text>
-        </Pressable>
+        <View style={{ width: 28 }} />
       </View>
 
       {/* Quick Actions */}

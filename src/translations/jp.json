@@ -1,9 +1,6 @@
 {
-  "shopping_list": "買い物リスト",
-  "settings": "設定",
-  "enter_item": "アイテムを入力",
-  "add": "追加",
-  "theme": "テーマ",
-  "sound": "サウンド",
-  "haptics": "触覚"
+  "common": {"add": "追加","edit": "編集","delete": "削除","cancel": "キャンセル","save": "保存","done": "完了","back": "戻る","search": "検索","loading": "読み込み中..."},
+  "settings": {"title": "設定","appearance": {"title": "外観","theme": "テーマ","language": "言語","selectTheme": "テーマを選択","selectLanguage": "言語を選択"},"behavior": {"title": "動作","haptics": "触覚フィードバック","sound": "サウンドエフェクト"},"about": {"title": "について","version": "バージョン"}},
+  "templates": {"title": "テンプレート","myTemplates": "マイテンプレート","predefinedTemplates": "定義済みテンプレート","createNew": "新規作成","noTemplates": "カスタムテンプレートはありません","createFirst": "最初のテンプレートを作成","items": "アイテム","addToList": "買い物リストに追加"},
+  "lists": {"title": "あなたのリスト","newList": "新しいリスト","noLists": "リストはありません","createFirst": "+をタップして最初のリストを作成"}
 }

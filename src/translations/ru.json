@@ -1,9 +1,48 @@
 {
-  "shopping_list": "Список покупок",
-  "settings": "Настройки",
-  "enter_item": "Введите товар",
-  "add": "Добавить",
-  "theme": "Тема",
-  "sound": "Звук",
-  "haptics": "Вибрация"
+  "common": {
+    "add": "Добавить",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "done": "Готово",
+    "back": "Назад",
+    "search": "Поиск",
+    "loading": "Загрузка..."
+  },
+  "settings": {
+    "title": "Настройки",
+    "appearance": {
+      "title": "Внешний вид",
+      "theme": "Тема",
+      "language": "Язык",
+      "selectTheme": "Выберите тему",
+      "selectLanguage": "Выберите язык"
+    },
+    "behavior": {
+      "title": "Поведение",
+      "haptics": "Вибрация",
+      "sound": "Звуковые эффекты"
+    },
+    "about": {
+      "title": "О приложении",
+      "version": "Версия"
+    }
+  },
+  "templates": {
+    "title": "Шаблоны",
+    "myTemplates": "Мои шаблоны",
+    "predefinedTemplates": "Готовые шаблоны",
+    "createNew": "Создать новый",
+    "noTemplates": "Нет пользовательских шаблонов",
+    "createFirst": "Создайте свой первый шаблон",
+    "items": "элементов",
+    "addToList": "Добавить в список покупок"
+  },
+  "lists": {
+    "title": "Ваши списки",
+    "newList": "Новый список",
+    "noLists": "Нет списков",
+    "createFirst": "Нажмите +, чтобы создать первый список"
+  }
 }

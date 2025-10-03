@@ -1,9 +1,86 @@
 {
-  "shopping_list": "Shopping List",
-  "settings": "Settings",
-  "enter_item": "Enter item",
-  "add": "Add",
-  "theme": "Theme",
-  "sound": "Sound",
-  "haptics": "Haptics"
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "done": "Done",
+    "back": "Back",
+    "search": "Search",
+    "loading": "Loading..."
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "language": "Language",
+      "selectTheme": "Select Theme",
+      "selectLanguage": "Select Language"
+    },
+    "behavior": {
+      "title": "Behavior",
+      "haptics": "Haptic Feedback",
+      "sound": "Sound Effects"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version"
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "myTemplates": "My Templates",
+    "predefinedTemplates": "Predefined Templates",
+    "createNew": "Create New",
+    "noTemplates": "No custom templates yet",
+    "createFirst": "Create your first template",
+    "items": "items",
+    "addToList": "Add to Shopping List"
+  },
+  "lists": {
+    "title": "Your Lists",
+    "newList": "New List",
+    "noLists": "No lists yet",
+    "createFirst": "Tap + to create your first list"
+  },
+  "more": {
+    "title": "More",
+    "settings": "Settings",
+    "settingsDesc": "App preferences and configuration",
+    "favorites": "Favorites",
+    "favoritesDesc": "Your favorite items and lists",
+    "stats": "Statistics",
+    "statsDesc": "Shopping insights and analytics",
+    "about": "About",
+    "aboutDesc": "App information and credits"
+  },
+  "favorites": {
+    "noFavorites": "No favorites yet",
+    "addFavoritesHint": "Star items and lists to add them here"
+  },
+  "stats": {
+    "totalLists": "Total Lists",
+    "totalItems": "Total Items",
+    "completedLists": "Completed",
+    "avgItemsPerList": "Avg Items",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No recent activity"
+  },
+  "about": {
+    "version": "Version",
+    "description": "About ShoppingListPro",
+    "descriptionText": "A premium shopping list app with smart features to make your shopping experience better.",
+    "features": "Key Features",
+    "feature1": "Multi-list management",
+    "feature2": "Smart templates",
+    "feature3": "Offline support",
+    "feature4": "Multi-language",
+    "credits": "Credits",
+    "developedBy": "Developed by Anton Chepur",
+    "poweredBy": "Powered by React Native",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
 }

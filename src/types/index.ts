@@ -25,7 +25,11 @@ export type RootStackParamList = {
   TemplatesHome: undefined;
   TemplateDetail: { templateId: string };
   CreateTemplate: undefined;
+  MoreHome: undefined;
   Settings: undefined;
+  Favorites: undefined;
+  Stats: undefined;
+  About: undefined;
 };
 
 // Component prop types
