@@ -47,3 +47,25 @@ export interface CreateRecipeIngredientData {
   unit: string;
   notes?: string;
 }
+
+export interface TemplateItem {
+  name: string;
+  quantity?: number;
+  unit?: string;
+  category?: string;
+  notes?: string;
+}
+
+export interface Template {
+  id: string;
+  name: string;
+  items: TemplateItem[];
+  isPredefined: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateTemplateData {
+  name: string;
+  items: TemplateItem[];
+}

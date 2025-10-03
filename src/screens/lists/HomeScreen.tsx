@@ -73,10 +73,9 @@ export const HomeScreen = () => {
           premium
         />
         <QuickActionCard
-          title="Recipes"
-          emoji="📖"
-          onPress={() => navigation.navigate('Recipes' as never)}
-          premium
+          title="Templates"
+          emoji="📋"
+          onPress={() => navigation.navigate('Templates' as never)}
         />
       </ScrollView>
 

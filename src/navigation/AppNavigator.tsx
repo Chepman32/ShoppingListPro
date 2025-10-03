@@ -12,7 +12,9 @@ import { ListDetailScreen } from '../screens/lists/ListDetailScreen';
 import { CreateListScreen } from '../screens/lists/CreateListScreen';
 import { ShoppingModeScreen } from '../screens/shopping/ShoppingModeScreen';
 import { PantryScreen } from '../screens/pantry/PantryScreen';
-import { RecipesScreen } from '../screens/recipes/RecipesScreen';
+import { TemplatesScreen } from '../screens/templates/TemplatesScreen';
+import { TemplateDetailScreen } from '../screens/templates/TemplateDetailScreen';
+import { CreateTemplateScreen } from '../screens/templates/CreateTemplateScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { colors } from '../theme';
 
@@ -52,6 +54,31 @@ const ListsStack = () => {
   );
 };
 
+const TemplatesStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
+      }}
+    >
+      <Stack.Screen name="TemplatesHome" component={TemplatesScreen} />
+      <Stack.Screen name="TemplateDetail" component={TemplateDetailScreen} />
+      <Stack.Screen
+        name="CreateTemplate"
+        component={CreateTemplateScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const AppNavigator = () => {
   return (
     <Tab.Navigator
@@ -80,10 +107,10 @@ export const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Recipes"
-        component={RecipesScreen}
+        name="Templates"
+        component={TemplatesStack}
         options={{
-          tabBarIcon: createEmojiIcon('📖'),
+          tabBarIcon: createEmojiIcon('📋'),
         }}
       />
       <Tab.Screen

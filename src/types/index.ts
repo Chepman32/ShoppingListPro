@@ -22,7 +22,9 @@ export type RootStackParamList = {
   CreateList: undefined;
   ShoppingMode: { listId: string };
   Pantry: undefined;
-  Recipes: undefined;
+  TemplatesHome: undefined;
+  TemplateDetail: { templateId: string };
+  CreateTemplate: undefined;
   Settings: undefined;
 };
 
