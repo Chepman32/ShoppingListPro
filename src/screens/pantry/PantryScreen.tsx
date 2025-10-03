@@ -5,7 +5,8 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { usePantryStore } from '../../stores';
 import { Card } from '../../components/core';
@@ -19,7 +20,8 @@ export const PantryScreen = () => {
   }, [fetchItems]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Pantry</Text>
 
       {/* Alerts */}
@@ -53,7 +55,7 @@ export const PantryScreen = () => {
         estimatedItemSize={100}
         keyExtractor={(item) => item.id}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

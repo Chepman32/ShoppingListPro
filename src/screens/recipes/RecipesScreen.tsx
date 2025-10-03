@@ -5,19 +5,21 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, typography, spacing } from '../../theme';
 
 export const RecipesScreen = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Recipes</Text>
       <View style={styles.emptyState}>
         <Text style={styles.emptyEmoji}>👨‍🍳</Text>
         <Text style={styles.emptyText}>No recipes yet</Text>
         <Text style={styles.emptySubtext}>Tap + to add your first recipe</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
