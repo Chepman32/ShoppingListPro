@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Input, Button } from '../../components/core';
 import { useListsStore, useSettingsStore } from '../../stores';
@@ -44,7 +45,8 @@ export const CreateListScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <View style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.closeButton}>✕</Text>
@@ -53,7 +55,11 @@ export const CreateListScreen = () => {
         <View style={{ width: 32 }} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <Input
           label="List Name"
           value={name}
@@ -99,11 +105,16 @@ export const CreateListScreen = () => {
           Create List
         </Button>
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -129,6 +140,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: spacing.lg,
+  },
+  contentContainer: {
+    paddingBottom: spacing.xxl,
   },
   sectionTitle: {
     fontSize: typography.h4,
@@ -175,7 +189,9 @@ const styles = StyleSheet.create({
     borderColor: colors.text,
   },
   footer: {
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.lg,
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
   },

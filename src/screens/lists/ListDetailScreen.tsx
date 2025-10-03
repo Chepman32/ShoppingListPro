@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -74,14 +75,17 @@ export const ListDetailScreen = () => {
 
   if (!list) {
     return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <View style={styles.container}>
+          <Text>Loading...</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()}>
@@ -148,7 +152,8 @@ export const ListDetailScreen = () => {
           />
         )}
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -186,6 +191,10 @@ const ItemRow: React.FC<{
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

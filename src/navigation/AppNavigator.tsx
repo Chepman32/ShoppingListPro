@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/lists/HomeScreen';
@@ -17,6 +18,13 @@ import { colors } from '../theme';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const createEmojiIcon = (emoji: string) =>
+  ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
+    <Text style={[styles.tabIcon, { color, fontSize: size, opacity: focused ? 1 : 0.6 }]}>
+      {emoji}
+    </Text>
+  );
 
 const ListsStack = () => {
   return (
@@ -61,30 +69,36 @@ export const AppNavigator = () => {
         name="Lists"
         component={ListsStack}
         options={{
-          tabBarIcon: () => '📝',
+          tabBarIcon: createEmojiIcon('📝'),
         }}
       />
       <Tab.Screen
         name="Pantry"
         component={PantryScreen}
         options={{
-          tabBarIcon: () => '🏪',
+          tabBarIcon: createEmojiIcon('🏪'),
         }}
       />
       <Tab.Screen
         name="Recipes"
         component={RecipesScreen}
         options={{
-          tabBarIcon: () => '📖',
+          tabBarIcon: createEmojiIcon('📖'),
         }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarIcon: () => '⚙️',
+          tabBarIcon: createEmojiIcon('⚙️'),
         }}
       />
     </Tab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  tabIcon: {
+    textAlign: 'center',
+  },
+});

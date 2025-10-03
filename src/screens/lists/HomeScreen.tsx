@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Card } from '../../components/core';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useListsStore } from '../../stores';
 import { colors, typography, spacing, borderRadius } from '../../theme';
 import { List } from '../../database';
@@ -37,7 +38,8 @@ export const HomeScreen = () => {
   const activeLists = lists.filter((l) => !l.isArchived);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>ListFlow</Text>
@@ -112,7 +114,8 @@ export const HomeScreen = () => {
       <Pressable style={styles.fab} onPress={handleCreateList}>
         <Text style={styles.fabText}>+</Text>
       </Pressable>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -196,6 +199,10 @@ const shadowStyle = {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

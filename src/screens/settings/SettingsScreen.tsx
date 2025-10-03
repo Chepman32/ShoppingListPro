@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, Switch, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../../stores';
 import { Card } from '../../components/core';
 import { colors, typography, spacing } from '../../theme';
@@ -20,8 +21,12 @@ export const SettingsScreen = () => {
   } = useSettingsStore();
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Settings</Text>
 
       {/* Premium Status */}
       {isPremium && (
@@ -78,14 +83,20 @@ export const SettingsScreen = () => {
           </View>
         </Card>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    backgroundColor: colors.background,
+    paddingBottom: spacing.xxl,
   },
   title: {
     fontSize: typography.h1,
