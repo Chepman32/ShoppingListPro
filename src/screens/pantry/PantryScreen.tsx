@@ -1,5 +1,5 @@
 /**
- * Pantry Screen (Premium Feature)
+ * Pantry Screen
  * Manage pantry items with expiry tracking
  * Based on SDD Section 6.6
  */
@@ -7,31 +7,16 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import { usePantryStore, useSettingsStore } from '../../stores';
+import { usePantryStore } from '../../stores';
 import { Card } from '../../components/core';
 import { colors, typography, spacing } from '../../theme';
 
 export const PantryScreen = () => {
-  const isPremium = useSettingsStore((state) => state.isPremium);
   const { items, expiringItems, lowStockItems, fetchItems } = usePantryStore();
 
   useEffect(() => {
-    if (isPremium) {
-      fetchItems();
-    }
-  }, [isPremium, fetchItems]);
-
-  if (!isPremium) {
-    return (
-      <View style={styles.premiumPrompt}>
-        <Text style={styles.premiumEmoji}>⭐</Text>
-        <Text style={styles.premiumTitle}>Premium Feature</Text>
-        <Text style={styles.premiumText}>
-          Upgrade to Premium to track pantry items, expiry dates, and more!
-        </Text>
-      </View>
-    );
-  }
+    fetchItems();
+  }, [fetchItems]);
 
   return (
     <View style={styles.container}>
@@ -83,27 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: typography.weightBold,
     color: colors.text,
     marginBottom: spacing.lg,
-  },
-  premiumPrompt: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: spacing.xl,
-  },
-  premiumEmoji: {
-    fontSize: 80,
-    marginBottom: spacing.lg,
-  },
-  premiumTitle: {
-    fontSize: typography.h2,
-    fontWeight: typography.weightBold,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  premiumText: {
-    fontSize: typography.body,
-    color: colors.textSecondary,
-    textAlign: 'center',
   },
   alertCard: {
     marginBottom: spacing.md,

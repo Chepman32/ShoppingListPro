@@ -41,16 +41,11 @@ interface SettingsState {
   currency: string;
   units: 'metric' | 'imperial';
 
-  // Premium
-  isPremium: boolean;
-  premiumExpiry: number | null;
-
   // Onboarding
   hasCompletedOnboarding: boolean;
 
   // Actions
   updateSettings: (updates: Partial<SettingsState>) => void;
-  setPremium: (isPremium: boolean, expiry?: Date) => void;
   completeOnboarding: () => void;
 }
 
@@ -67,19 +62,10 @@ export const useSettingsStore = create<SettingsState>()(
       showCompletedItems: true,
       currency: 'USD',
       units: 'imperial',
-      isPremium: false,
-      premiumExpiry: null,
       hasCompletedOnboarding: false,
 
       updateSettings: (updates) => {
         set(updates);
-      },
-
-      setPremium: (isPremium, expiry) => {
-        set({
-          isPremium,
-          premiumExpiry: expiry ? expiry.getTime() : null,
-        });
       },
 
       completeOnboarding: () => {

@@ -266,7 +266,7 @@ import { useListsStore, useSettingsStore } from './src/stores';
 
 // In component
 const { lists, createList, deleteList } = useListsStore();
-const { theme, isPremium } = useSettingsStore();
+const { theme } = useSettingsStore();
 
 // Create list
 await createList({

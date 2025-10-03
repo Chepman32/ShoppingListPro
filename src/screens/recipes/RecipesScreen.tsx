@@ -1,29 +1,14 @@
 /**
- * Recipes Screen (Premium Feature)
+ * Recipes Screen
  * Browse and manage recipes
  * Based on SDD Section 6.7
  */
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useSettingsStore } from '../../stores';
 import { colors, typography, spacing } from '../../theme';
 
 export const RecipesScreen = () => {
-  const isPremium = useSettingsStore((state) => state.isPremium);
-
-  if (!isPremium) {
-    return (
-      <View style={styles.premiumPrompt}>
-        <Text style={styles.premiumEmoji}>📖</Text>
-        <Text style={styles.premiumTitle}>Premium Feature</Text>
-        <Text style={styles.premiumText}>
-          Upgrade to Premium to store recipes and add ingredients to your lists!
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Recipes</Text>
@@ -47,27 +32,6 @@ const styles = StyleSheet.create({
     fontWeight: typography.weightBold,
     color: colors.text,
     marginBottom: spacing.lg,
-  },
-  premiumPrompt: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: spacing.xl,
-  },
-  premiumEmoji: {
-    fontSize: 80,
-    marginBottom: spacing.lg,
-  },
-  premiumTitle: {
-    fontSize: typography.h2,
-    fontWeight: typography.weightBold,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  premiumText: {
-    fontSize: typography.body,
-    color: colors.textSecondary,
-    textAlign: 'center',
   },
   emptyState: {
     flex: 1,

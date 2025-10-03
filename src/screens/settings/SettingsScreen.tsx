@@ -16,7 +16,6 @@ export const SettingsScreen = () => {
     theme,
     hapticsEnabled,
     soundEnabled,
-    isPremium,
     updateSettings,
   } = useSettingsStore();
 
@@ -27,16 +26,6 @@ export const SettingsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>Settings</Text>
-
-      {/* Premium Status */}
-      {isPremium && (
-        <Card style={styles.premiumCard}>
-          <Text style={styles.premiumBadge}>⭐ Premium</Text>
-          <Text style={styles.premiumText}>
-            You have access to all premium features
-          </Text>
-        </Card>
-      )}
 
       {/* Appearance */}
       <View style={styles.section}>
@@ -103,21 +92,6 @@ const styles = StyleSheet.create({
     fontWeight: typography.weightBold,
     color: colors.text,
     margin: spacing.lg,
-  },
-  premiumCard: {
-    marginHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
-    backgroundColor: colors.primary + '20',
-  },
-  premiumBadge: {
-    fontSize: typography.h4,
-    fontWeight: typography.weightBold,
-    color: colors.text,
-    marginBottom: spacing.sm,
-  },
-  premiumText: {
-    fontSize: typography.body,
-    color: colors.textSecondary,
   },
   section: {
     marginBottom: spacing.lg,
