@@ -55,6 +55,13 @@ export const MoreScreen = () => {
       description: t('more.statsDesc'),
     },
     {
+      id: 'product',
+      title: t('more.product'),
+      icon: '🛍️',
+      screen: 'Product',
+      description: t('more.productDesc'),
+    },
+    {
       id: 'about',
       title: t('more.about'),
       icon: 'ℹ️',

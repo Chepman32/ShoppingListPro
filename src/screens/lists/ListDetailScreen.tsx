@@ -105,6 +105,25 @@ export const ListDetailScreen = () => {
     loadListAndItems();
   };
 
+  const handleOpenProduct = (item: ListItem) => {
+    navigation.navigate(
+      'Product' as never,
+      {
+        product: {
+          name: item.name,
+          quantity: String(item.quantity ?? 1),
+          unit: item.unit || 'pcs',
+          category: item.category,
+          notes: item.notes,
+          description: item.notes,
+          imageUri: item.imageUri,
+          attachments: [],
+          lastUpdated: new Date().toISOString(),
+        },
+      } as never
+    );
+  };
+
   const closeMenu = () => {
     setIsMenuVisible(false);
     setMenuPosition(null);
@@ -334,6 +353,7 @@ export const ListDetailScreen = () => {
                 onToggle={() => handleToggleItem(item)}
                 onDelete={() => handleDeleteItem(item)}
                 isEditing={isEditing}
+                onPress={!isEditing ? () => handleOpenProduct(item) : undefined}
               />
             )}
             estimatedItemSize={80}
@@ -379,7 +399,8 @@ const ItemRow: React.FC<{
   onToggle: () => void;
   onDelete: () => void;
   isEditing: boolean;
-}> = ({ item, index, onToggle, onDelete, isEditing }) => {
+  onPress?: () => void;
+}> = ({ item, index, onToggle, onDelete, isEditing, onPress }) => {
   return (
     <Animated.View
       entering={FadeInUp.delay(index * 30)}
@@ -387,7 +408,14 @@ const ItemRow: React.FC<{
       style={styles.itemRow}
     >
       <Checkbox checked={item.isChecked} onChange={onToggle} />
-      <View style={styles.itemContent}>
+      <Pressable
+        onPress={onPress}
+        disabled={!onPress}
+        style={({ pressed }) => [
+          styles.itemContent,
+          pressed && styles.itemContentPressed,
+        ]}
+      >
         <Text
           style={[
             styles.itemName,
@@ -404,7 +432,7 @@ const ItemRow: React.FC<{
         >
           {item.quantity} {item.unit}
         </Text>
-      </View>
+      </Pressable>
       <Pressable
         onPress={onDelete}
         disabled={!isEditing}
@@ -586,6 +614,9 @@ const styles = StyleSheet.create({
   itemContent: {
     flex: 1,
     marginLeft: spacing.md,
+  },
+  itemContentPressed: {
+    opacity: 0.7,
   },
   itemName: {
     fontSize: typography.body,

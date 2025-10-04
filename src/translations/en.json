@@ -57,8 +57,31 @@
     "favoritesDesc": "Your favorite items and lists",
     "stats": "Statistics",
     "statsDesc": "Shopping insights and analytics",
+    "product": "Product",
+    "productDesc": "Manage product details and attachments",
     "about": "About",
     "aboutDesc": "App information and credits"
+  },
+  "product": {
+    "addAttachment": "Add Attachment",
+    "productImage": "Product Image",
+    "details": "Details",
+    "measurements": "Measurements",
+    "description": "Description",
+    "notes": "Notes",
+    "attachments": "Attachments",
+    "tapToAddImage": "Tap to add product image",
+    "noImage": "No image added yet",
+    "noDescription": "No description yet.",
+    "noNotes": "No notes yet.",
+    "noAttachments": "No attachments added yet.",
+    "addAttachmentHint": "Add links, notes, or other helpful references.",
+    "storageInstructions": "Storage instructions, reminders, etc.",
+    "updatePhoto": "Update the product photo.",
+    "imageSelectionFailed": "Unable to access the photo library on this device.",
+    "lastUpdated": "Last updated",
+    "chooseFromLibrary": "Choose from Library",
+    "removeImage": "Remove Image"
   },
   "favorites": {
     "noFavorites": "No favorites yet",
@@ -3702,6 +3725,13 @@
     "shammy_towel": "Shammy towel",
     "drying_coat": "Drying coat",
     "dog_robe": "Dog robe",
-    "absorbent_robe": "Absorbent robe"
+    "absorbent_robe": "Absorbent robe",
+    "nameLabel": "Product Name",
+    "brandLabel": "Brand",
+    "skuLabel": "SKU / Code",
+    "categoryLabel": "Category",
+    "quantityLabel": "Quantity",
+    "attachmentTitleLabel": "Title",
+    "attachmentDetailsLabel": "Details"
   }
 }

@@ -23,6 +23,7 @@ import { AboutScreen } from '../screens/more/AboutScreen';
 import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
 import { AddMealScreen } from '../screens/mealPlan/AddMealScreen';
 import { GenerateShoppingListScreen } from '../screens/mealPlan/GenerateShoppingListScreen';
+import { ProductScreen } from '../screens/products/ProductScreen';
 import { colors } from '../theme';
 
 const Stack = createStackNavigator();
@@ -57,6 +58,11 @@ const ListsStack = () => {
         name="ListDetail"
         component={ListDetailScreen}
         options={{ title: 'List' }}
+      />
+      <Stack.Screen
+        name="Product"
+        component={ProductScreen}
+        options={{ title: 'Product' }}
       />
       <Stack.Screen
         name="CreateList"
@@ -180,6 +186,11 @@ const MoreStack = () => {
         name="Stats"
         component={StatsScreen}
         options={{ title: 'Statistics' }}
+      />
+      <Stack.Screen
+        name="Product"
+        component={ProductScreen}
+        options={{ title: 'Product' }}
       />
       <Stack.Screen
         name="About"
