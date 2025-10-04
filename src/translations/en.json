@@ -78,9 +78,10 @@
     "addAttachmentHint": "Add links, notes, or other helpful references.",
     "storageInstructions": "Storage instructions, reminders, etc.",
     "updatePhoto": "Update the product photo.",
-    "imageSelectionFailed": "Unable to access the photo library on this device.",
+    "imageSelectionFailed": "Unable to access the photo gallery on this device. Please check your permissions.",
+    "imagePickerUnavailable": "Image selection is unavailable. Install react-native-image-picker and rebuild the app to add photos.",
     "lastUpdated": "Last updated",
-    "chooseFromLibrary": "Choose from Library",
+    "chooseFromLibrary": "Choose from Gallery",
     "removeImage": "Remove Image"
   },
   "favorites": {

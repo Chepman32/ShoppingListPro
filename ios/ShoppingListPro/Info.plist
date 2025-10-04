@@ -33,6 +33,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow ShoppingListPro to access your photo gallery so you can add product images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow ShoppingListPro to save product images to your photo gallery.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

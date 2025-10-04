@@ -16,7 +16,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { Input, Button } from '../../components/core';
 import { colors, spacing, typography, borderRadius } from '../../theme';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +24,7 @@ const measurementUnits = ['kg', 'g', 'lb', 'oz', 'l', 'ml', 'pcs', 'pack'];
 
 type AttachmentType = 'link' | 'photo' | 'note' | 'location' | 'file';
 type AttachmentInput = Partial<Attachment> & { type?: AttachmentType };
+type ImagePickerModule = typeof import('react-native-image-picker');
 
 interface Attachment {
   id: string;
@@ -55,6 +55,23 @@ const attachmentTypeMeta: Record<AttachmentType, { label: string; icon: string; 
     location: { label: 'Location', icon: '📍', placeholder: 'Store aisle or address' },
     file: { label: 'Attachment', icon: '📎', placeholder: 'Filename or description' },
   };
+
+let cachedImagePicker: ImagePickerModule | null = null;
+
+const getImagePicker = (): ImagePickerModule | null => {
+  if (cachedImagePicker) {
+    return cachedImagePicker;
+  }
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    cachedImagePicker = require('react-native-image-picker');
+    return cachedImagePicker;
+  } catch (error) {
+    console.warn('react-native-image-picker module not available', error);
+    return null;
+  }
+};
 
 const DEFAULT_PRODUCT_TEMPLATE: Product = {
   name: 'Organic Honeycrisp Apples',
@@ -209,8 +226,20 @@ export const ProductScreen = () => {
 
   const handleChooseImage = async () => {
     try {
-      const result = await launchImageLibrary({ mediaType: 'photo', quality: 0.8 });
+      const imagePicker = getImagePicker();
+
+      if (!imagePicker) {
+        Alert.alert(t('product.imagePickerUnavailable'));
+        return;
+      }
+
+      const result = await imagePicker.launchImageLibrary({ mediaType: 'photo', quality: 0.8 });
       if (result.didCancel) return;
+
+      if (result.errorCode) {
+        Alert.alert(t('product.imageSelectionFailed'));
+        return;
+      }
       const uri = result.assets?.[0]?.uri;
       if (uri) {
         updateDraft({ imageUri: uri });
