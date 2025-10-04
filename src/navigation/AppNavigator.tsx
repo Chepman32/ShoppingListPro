@@ -21,6 +21,7 @@ import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { FavoritesScreen } from '../screens/more/FavoritesScreen';
 import { StatsScreen } from '../screens/more/StatsScreen';
 import { AboutScreen } from '../screens/more/AboutScreen';
+import { RecentsScreen } from '../screens/more/RecentsScreen';
 import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
 import { AddMealScreen } from '../screens/mealPlan/AddMealScreen';
 import { GenerateShoppingListScreen } from '../screens/mealPlan/GenerateShoppingListScreen';
@@ -159,6 +160,11 @@ const MoreStack = () => {
         name="About"
         component={AboutScreen}
         options={{ title: 'About' }}
+      />
+      <Stack.Screen
+        name="Recents"
+        component={RecentsScreen}
+        options={{ title: 'Recent Items' }}
       />
     </Stack.Navigator>
   );

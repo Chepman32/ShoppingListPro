@@ -43,7 +43,9 @@ export const HomeScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>ListFlow</Text>
-        <View style={{ width: 28 }} />
+        <Pressable onPress={() => navigation.navigate('More' as never, { screen: 'Recents' } as never)}>
+          <Text style={styles.recentsIcon}>🕒</Text>
+        </Pressable>
       </View>
 
       {/* Quick Actions */}
@@ -54,9 +56,9 @@ export const HomeScreen = () => {
         contentContainerStyle={styles.quickActionsContent}
       >
         <QuickActionCard
-          title="+ New List"
-          emoji="🆕"
-          onPress={handleCreateList}
+          title="Recents"
+          emoji="🕒"
+          onPress={() => navigation.navigate('More' as never, { screen: 'Recents' } as never)}
         />
         <QuickActionCard
           title="Meal Plan"
@@ -216,7 +218,7 @@ const styles = StyleSheet.create({
     fontWeight: typography.weightBold,
     color: colors.text,
   },
-  settingsIcon: {
+  recentsIcon: {
     fontSize: 28,
   },
   quickActions: {

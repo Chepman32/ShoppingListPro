@@ -27,9 +27,11 @@ import { database, List, ListItem } from '../../database';
 import { colors, typography, spacing, borderRadius } from '../../theme';
 import { Q } from '@nozbe/watermelondb';
 import { useListsStore, useSuggestionsStore, useFavoritesStore } from '../../stores';
+import { useRecentsStore } from '../../stores/recentsStore';
 import type { View as RNView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { FavoriteListEntry } from '../../types/favorites';
+import type { RecentListEntry } from '../../types/recents';
 
 const buildListFavoriteEntry = (list: List, favoritedAt?: string): FavoriteListEntry => ({
   type: 'list',
@@ -38,6 +40,15 @@ const buildListFavoriteEntry = (list: List, favoritedAt?: string): FavoriteListE
   icon: list.icon,
   color: list.color,
   favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
+
+const buildListRecentEntry = (list: List): RecentListEntry => ({
+  type: 'list',
+  id: list.id,
+  name: list.name,
+  icon: list.icon,
+  color: list.color,
+  accessedAt: new Date().toISOString(),
 });
 
 export const ListDetailScreen = () => {
@@ -65,6 +76,7 @@ export const ListDetailScreen = () => {
   const addFavorite = useFavoritesStore((state) => state.addFavorite);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const favorites = useFavoritesStore((state) => state.favorites);
+  const addRecent = useRecentsStore((state) => state.addRecent);
 
   const favoriteEntry = list
     ? favorites.find((fav) => fav.type === 'list' && fav.id === list.id)
@@ -90,6 +102,9 @@ export const ListDetailScreen = () => {
   const loadListAndItems = async () => {
     const loadedList = await database.get<List>('lists').find(listId);
     setList(loadedList);
+
+    // Track this list as recently accessed
+    addRecent(buildListRecentEntry(loadedList));
 
     const listItems = await loadedList.items
       .extend(Q.sortBy('position', Q.asc))

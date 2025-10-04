@@ -17,9 +17,11 @@ import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card } from '../../components/core';
 import { useMealPlanStore } from '../../stores/mealPlanStore';
+import { useRecentsStore } from '../../stores/recentsStore';
 import { useTheme } from '../../ThemeContext';
 import { spacing, typography, borderRadius } from '../../theme';
 import { MealPlan } from '../../database';
+import type { RecentMealPlanEntry } from '../../types/recents';
 
 type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 
@@ -49,6 +51,7 @@ export const MealPlannerScreen = () => {
     navigateWeek,
     getMealsForDate,
   } = useMealPlanStore();
+  const addRecent = useRecentsStore((state) => state.addRecent);
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedMealType, setSelectedMealType] = useState<MealType | null>(null);
@@ -65,7 +68,17 @@ export const MealPlannerScreen = () => {
     const endDate = new Date(currentWeekStart);
     endDate.setDate(endDate.getDate() + 7);
     fetchMealPlans(currentWeekStart, endDate);
-  }, [currentWeekStart, fetchMealPlans]);
+
+    // Track meal planner screen as recently accessed
+    const recentEntry: RecentMealPlanEntry = {
+      type: 'mealPlan',
+      id: `meal-planner-${currentWeekStart.toISOString()}`,
+      date: currentWeekStart.toISOString(),
+      mealType: 'breakfast',
+      accessedAt: new Date().toISOString(),
+    };
+    addRecent(recentEntry);
+  }, [currentWeekStart, fetchMealPlans, addRecent]);
 
   const handleAddMeal = (date: Date, mealType: MealType) => {
     setSelectedDate(date);
@@ -114,7 +127,11 @@ export const MealPlannerScreen = () => {
 
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={[styles.backButtonText, { color: theme.primary }]}>‹</Text>
+        </TouchableOpacity>
         <Text style={[styles.title, { color: theme.text }]}>Meal Planner</Text>
+        <View style={styles.headerSpacer} />
       </View>
 
       {/* Week Navigation */}
@@ -310,14 +327,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
     paddingBottom: spacing.md,
-    alignItems: 'center',
+  },
+  backButton: {
+    padding: spacing.xs,
+  },
+  backButtonText: {
+    fontSize: 32,
+    fontWeight: typography.weightBold,
   },
   title: {
     fontSize: typography.h2,
     fontWeight: typography.weightBold,
+  },
+  headerSpacer: {
+    width: 40,
   },
   weekNavigation: {
     flexDirection: 'row',

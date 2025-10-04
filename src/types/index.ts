@@ -7,6 +7,7 @@ import type { ProductNavigationParams } from './product';
 
 export * from './database';
 export * from './product';
+export * from './recents';
 export type {
   Theme,
   ColorName,
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   Favorites: undefined;
   Stats: undefined;
   About: undefined;
+  Recents: undefined;
   Product: ProductNavigationParams;
 };
 

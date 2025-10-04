@@ -20,7 +20,9 @@ import { Input, Button } from '../../components/core';
 import { colors, spacing, typography, borderRadius } from '../../theme';
 import { useTranslation } from 'react-i18next';
 import { useFavoritesStore } from '../../stores';
+import { useRecentsStore } from '../../stores/recentsStore';
 import type { FavoriteProductEntry } from '../../types/favorites';
+import type { RecentProductEntry } from '../../types/recents';
 import type {
   ProductDetails,
   ProductAttachment,
@@ -63,6 +65,20 @@ const buildProductFavoriteEntry = (
   sourceListName: params?.listName,
   sourceListItemId: params?.listItemId,
   favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
+
+const buildProductRecentEntry = (
+  details: ProductDetails,
+  params: ProductNavigationParams | undefined,
+  recentId: string
+): RecentProductEntry => ({
+  type: 'product',
+  id: recentId,
+  name: details.name,
+  product: cloneProductDetails(details),
+  sourceListId: params?.listId,
+  sourceListName: params?.listName,
+  accessedAt: new Date().toISOString(),
 });
 
 const attachmentTypeMeta: Record<
@@ -205,6 +221,7 @@ export const ProductScreen = () => {
   const addFavorite = useFavoritesStore((state) => state.addFavorite);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const favorites = useFavoritesStore((state) => state.favorites);
+  const addRecent = useRecentsStore((state) => state.addRecent);
 
   const favoriteId = favoriteIdRef.current;
   const favoriteEntry = favorites.find(
@@ -218,7 +235,10 @@ export const ProductScreen = () => {
   useEffect(() => {
     setProduct(derivedProduct);
     setDraft(derivedProduct);
-  }, [derivedProduct]);
+
+    // Track this product as recently accessed
+    addRecent(buildProductRecentEntry(derivedProduct, params, favoriteId));
+  }, [derivedProduct, params, favoriteId, addRecent]);
 
   useEffect(() => {
     if (!favoriteEntry) return;

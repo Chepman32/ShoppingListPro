@@ -17,6 +17,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useTemplatesStore, useListsStore, useFavoritesStore } from '../../stores';
+import { useRecentsStore } from '../../stores/recentsStore';
 import { Button, Card } from '../../components/core';
 import { colors, typography, spacing } from '../../theme';
 import { RootStackParamList } from '../../types';
@@ -24,6 +25,7 @@ import { database } from '../../database';
 import ListItem from '../../database/models/ListItem';
 import { useTranslation } from 'react-i18next';
 import type { FavoriteTemplateEntry } from '../../types/favorites';
+import type { RecentTemplateEntry } from '../../types/recents';
 import type { Template } from '../../types/database';
 
 const buildTemplateFavoriteEntry = (
@@ -35,6 +37,14 @@ const buildTemplateFavoriteEntry = (
   name: template.name,
   isPredefined: Boolean(template.isPredefined),
   favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
+
+const buildTemplateRecentEntry = (template: Template): RecentTemplateEntry => ({
+  type: 'template',
+  id: template.id,
+  name: template.name,
+  isPredefined: Boolean(template.isPredefined),
+  accessedAt: new Date().toISOString(),
 });
 
 type TemplateDetailRouteProp = RouteProp<RootStackParamList, 'TemplateDetail'>;
@@ -50,6 +60,7 @@ export const TemplateDetailScreen = () => {
   const addFavorite = useFavoritesStore((state) => state.addFavorite);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const favorites = useFavoritesStore((state) => state.favorites);
+  const addRecent = useRecentsStore((state) => state.addRecent);
 
   const [showListPicker, setShowListPicker] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -65,6 +76,13 @@ export const TemplateDetailScreen = () => {
   useEffect(() => {
     fetchLists();
   }, [fetchLists]);
+
+  useEffect(() => {
+    if (template) {
+      // Track this template as recently accessed
+      addRecent(buildTemplateRecentEntry(template));
+    }
+  }, [template, addRecent]);
 
   useEffect(() => {
     if (!template || !favoriteEntry) return;
