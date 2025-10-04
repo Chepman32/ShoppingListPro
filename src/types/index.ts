@@ -35,6 +35,7 @@ export type RootStackParamList = {
   Stats: undefined;
   About: undefined;
   Recents: undefined;
+  MealPlannerFromHome: undefined;
   Product: ProductNavigationParams;
 };
 

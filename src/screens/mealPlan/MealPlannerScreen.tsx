@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card } from '../../components/core';
@@ -122,17 +121,8 @@ export const MealPlannerScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top']}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'} />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={[styles.backButtonText, { color: theme.primary }]}>‹</Text>
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: theme.text }]}>Meal Planner</Text>
-        <View style={styles.headerSpacer} />
-      </View>
 
       {/* Week Navigation */}
       <View style={styles.weekNavigation}>
@@ -229,7 +219,7 @@ export const MealPlannerScreen = () => {
           <Text style={styles.generateButtonText}>🛒 Generate Shopping List</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -325,28 +315,6 @@ const MealCell: React.FC<MealCellProps> = ({ date, mealType, meals, onAdd, theme
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.md,
-  },
-  backButton: {
-    padding: spacing.xs,
-  },
-  backButtonText: {
-    fontSize: 32,
-    fontWeight: typography.weightBold,
-  },
-  title: {
-    fontSize: typography.h2,
-    fontWeight: typography.weightBold,
-  },
-  headerSpacer: {
-    width: 40,
   },
   weekNavigation: {
     flexDirection: 'row',

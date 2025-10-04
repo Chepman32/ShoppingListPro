@@ -12,7 +12,6 @@ import {
   StatusBar,
   Pressable,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Card } from '../../components/core';
 import { colors, spacing, typography, borderRadius } from '../../theme';
@@ -133,10 +132,7 @@ export const RecentsScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.background }]}
-      edges={['top']}
-    >
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <StatusBar barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'} />
 
       <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
@@ -154,7 +150,7 @@ export const RecentsScreen = () => {
           <View style={styles.sectionsContainer}>
             <View style={styles.headerRow}>
               <Text style={[styles.headerTitle, { color: theme.text }]}>
-                Recent Items ({recents.length})
+                {recents.length} items
               </Text>
               <Pressable onPress={clearRecents}>
                 <Text style={[styles.clearButton, { color: theme.primary }]}>
@@ -308,7 +304,7 @@ export const RecentsScreen = () => {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

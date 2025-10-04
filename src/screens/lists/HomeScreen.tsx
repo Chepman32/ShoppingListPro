@@ -43,7 +43,7 @@ export const HomeScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>ListFlow</Text>
-        <Pressable onPress={() => navigation.navigate('More' as never, { screen: 'Recents' } as never)}>
+        <Pressable onPress={() => navigation.navigate('Recents' as never)}>
           <Text style={styles.recentsIcon}>🕒</Text>
         </Pressable>
       </View>
@@ -58,12 +58,12 @@ export const HomeScreen = () => {
         <QuickActionCard
           title="Recents"
           emoji="🕒"
-          onPress={() => navigation.navigate('More' as never, { screen: 'Recents' } as never)}
+          onPress={() => navigation.navigate('Recents' as never)}
         />
         <QuickActionCard
           title="Meal Plan"
           emoji="📅"
-          onPress={() => navigation.navigate('MealPlan' as never)}
+          onPress={() => navigation.navigate('MealPlannerFromHome' as never)}
         />
         <QuickActionCard
           title="Pantry"

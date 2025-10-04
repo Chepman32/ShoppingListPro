@@ -76,6 +76,16 @@ const ListsStack = () => {
         component={ShoppingModeScreen}
         options={{ title: 'Shopping Mode' }}
       />
+      <Stack.Screen
+        name="Recents"
+        component={RecentsScreen}
+        options={{ title: 'Recent Items' }}
+      />
+      <Stack.Screen
+        name="MealPlannerFromHome"
+        component={MealPlannerScreen}
+        options={{ title: 'Meal Planner' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -160,11 +170,6 @@ const MoreStack = () => {
         name="About"
         component={AboutScreen}
         options={{ title: 'About' }}
-      />
-      <Stack.Screen
-        name="Recents"
-        component={RecentsScreen}
-        options={{ title: 'Recent Items' }}
       />
     </Stack.Navigator>
   );
