@@ -20,6 +20,9 @@ import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { FavoritesScreen } from '../screens/more/FavoritesScreen';
 import { StatsScreen } from '../screens/more/StatsScreen';
 import { AboutScreen } from '../screens/more/AboutScreen';
+import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
+import { AddMealScreen } from '../screens/mealPlan/AddMealScreen';
+import { GenerateShoppingListScreen } from '../screens/mealPlan/GenerateShoppingListScreen';
 import { colors } from '../theme';
 
 const Stack = createStackNavigator();
@@ -83,6 +86,37 @@ const TemplatesStack = () => {
   );
 };
 
+const MealPlanStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
+      }}
+    >
+      <Stack.Screen name="MealPlannerHome" component={MealPlannerScreen} />
+      <Stack.Screen
+        name="AddMeal"
+        component={AddMealScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="GenerateShoppingList"
+        component={GenerateShoppingListScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const MoreStack = () => {
   return (
     <Stack.Navigator
@@ -129,6 +163,14 @@ export const AppNavigator = () => {
         component={PantryScreen}
         options={{
           tabBarIcon: createEmojiIcon('🏪'),
+        }}
+      />
+      <Tab.Screen
+        name="MealPlan"
+        component={MealPlanStack}
+        options={{
+          tabBarIcon: createEmojiIcon('📅'),
+          tabBarLabel: 'Meal Plan',
         }}
       />
       <Tab.Screen

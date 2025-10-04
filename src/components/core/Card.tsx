@@ -9,7 +9,7 @@ import { colors, borderRadius, spacing, shadows } from '../../theme';
 
 interface CardProps {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   elevation?: 'sm' | 'md' | 'lg';
 }
 

@@ -153,6 +153,27 @@ export const SettingsScreen = () => {
           </Card>
         </View>
 
+        {/* Data */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
+            {t('settings.data.title')}
+          </Text>
+          <Card style={{ backgroundColor: currentTheme.surface }}>
+            <TouchableOpacity
+              style={styles.setting}
+              onPress={() => {
+                // TODO: Implement export stats functionality
+                alert('Export Stats feature coming soon!');
+              }}
+            >
+              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+                {t('settings.data.exportStats')}
+              </Text>
+              <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
+            </TouchableOpacity>
+          </Card>
+        </View>
+
         {/* About */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>

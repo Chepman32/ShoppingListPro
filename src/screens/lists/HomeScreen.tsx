@@ -59,10 +59,9 @@ export const HomeScreen = () => {
           onPress={handleCreateList}
         />
         <QuickActionCard
-          title="Shopping Mode"
-          emoji="🛒"
-          onPress={() => {}}
-          disabled={activeLists.length === 0}
+          title="Meal Plan"
+          emoji="📅"
+          onPress={() => navigation.navigate('MealPlan' as never)}
         />
         <QuickActionCard
           title="Pantry"

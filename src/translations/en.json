@@ -24,6 +24,10 @@
       "haptics": "Haptic Feedback",
       "sound": "Sound Effects"
     },
+    "data": {
+      "title": "Data",
+      "exportStats": "Export Statistics"
+    },
     "about": {
       "title": "About",
       "version": "Version"
@@ -82,5 +86,32 @@
     "poweredBy": "Powered by React Native",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service"
+  },
+  "mealPlan": {
+    "title": "Meal Planner",
+    "addMeal": "Add Meal",
+    "generateList": "Generate Shopping List",
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack",
+    "servings": "Servings",
+    "notes": "Notes",
+    "leftover": "Mark as Leftover",
+    "leftoverHint": "This meal is a leftover from a previous meal",
+    "mealSource": "Meal Source",
+    "fromRecipe": "From Recipe",
+    "customMeal": "Custom Meal",
+    "selectRecipe": "Select Recipe",
+    "mealName": "Meal Name",
+    "noRecipes": "No recipes available. Create a recipe first or use a custom meal.",
+    "dateRange": "Date Range",
+    "listName": "List Name",
+    "generateListTitle": "Create Shopping List from Meal Plan",
+    "generateListDesc": "This will create a shopping list with all ingredients needed for your planned meals.",
+    "generateListHint": "The list will include ingredients from all recipes in your meal plan for the selected week. Quantities will be adjusted based on the number of servings.",
+    "success": "Success",
+    "listCreated": "Shopping list created successfully!",
+    "viewList": "View List"
   }
 }

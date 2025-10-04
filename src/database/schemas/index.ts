@@ -107,5 +107,23 @@ export const schema = appSchema({
         { name: 'position', type: 'number' },
       ],
     }),
+
+    // MealPlans Table (Meal Planning Feature)
+    tableSchema({
+      name: 'meal_plans',
+      columns: [
+        { name: 'date', type: 'number', isIndexed: true }, // Unix timestamp
+        { name: 'meal_type', type: 'string', isIndexed: true }, // breakfast, lunch, dinner, snack
+        { name: 'recipe_id', type: 'string', isOptional: true, isIndexed: true },
+        { name: 'custom_meal_name', type: 'string', isOptional: true },
+        { name: 'notes', type: 'string', isOptional: true },
+        { name: 'servings', type: 'number' },
+        { name: 'is_leftover', type: 'boolean' },
+        { name: 'leftover_from_date', type: 'number', isOptional: true },
+        { name: 'position', type: 'number' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
   ],
 });

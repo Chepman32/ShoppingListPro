@@ -14,6 +14,7 @@ import {
   Category,
   Recipe,
   RecipeIngredient,
+  MealPlan,
 } from './models';
 
 // Create the adapter
@@ -33,6 +34,7 @@ export const database = new Database({
     Category,
     Recipe,
     RecipeIngredient,
+    MealPlan,
   ],
 });
 
