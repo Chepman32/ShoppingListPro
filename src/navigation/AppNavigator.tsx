@@ -26,7 +26,7 @@ import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
 import { AddMealScreen } from '../screens/mealPlan/AddMealScreen';
 import { GenerateShoppingListScreen } from '../screens/mealPlan/GenerateShoppingListScreen';
 import { ProductScreen } from '../screens/products/ProductScreen';
-import { colors } from '../theme';
+import { useTheme } from '../ThemeContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -177,15 +177,17 @@ const MoreStack = () => {
 };
 
 export const AppNavigator = () => {
+  const { theme } = useTheme();
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textTertiary,
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textTertiary,
         tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.borderLight,
+          backgroundColor: theme.surface,
+          borderTopColor: theme.borderLight,
         },
       }}
     >

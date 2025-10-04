@@ -16,12 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Card } from '../../components/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useListsStore } from '../../stores';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { typography, spacing, borderRadius } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import { List } from '../../database';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
   const { lists, fetchLists, deleteList, archiveList } = useListsStore();
+  const { theme } = useTheme();
 
   useEffect(() => {
     fetchLists();
@@ -38,11 +40,11 @@ export const HomeScreen = () => {
   const activeLists = lists.filter((l) => !l.isArchived);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={['top']}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>ListFlow</Text>
+        <Text style={[styles.title, { color: theme.text }]}>ListFlow</Text>
         <Pressable onPress={() => navigation.navigate('Recents' as never)}>
           <Text style={styles.recentsIcon}>🕒</Text>
         </Pressable>
@@ -80,15 +82,15 @@ export const HomeScreen = () => {
 
       {/* Lists Section */}
       <View style={styles.listsSection}>
-        <Text style={styles.sectionTitle}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>
           Your Lists ({activeLists.length})
         </Text>
 
         {activeLists.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🛒</Text>
-            <Text style={styles.emptyText}>No lists yet</Text>
-            <Text style={styles.emptySubtext}>Tap + to create your first list</Text>
+            <Text style={[styles.emptyText, { color: theme.text }]}>No lists yet</Text>
+            <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>Tap + to create your first list</Text>
           </View>
         ) : (
           <FlashList
@@ -109,7 +111,7 @@ export const HomeScreen = () => {
       </View>
 
       {/* Floating Action Button */}
-      <Pressable style={styles.fab} onPress={handleCreateList}>
+      <Pressable style={[styles.fab, { backgroundColor: theme.primary }]} onPress={handleCreateList}>
         <Text style={styles.fabText}>+</Text>
       </Pressable>
       </View>
@@ -124,11 +126,13 @@ const QuickActionCard: React.FC<{
   disabled?: boolean;
   premium?: boolean;
 }> = ({ title, emoji, onPress, disabled, premium }) => {
+  const { theme } = useTheme();
+
   return (
     <Pressable onPress={onPress} disabled={disabled}>
       <Card style={[styles.quickActionCard, disabled && styles.quickActionDisabled]}>
         <Text style={styles.quickActionEmoji}>{emoji}</Text>
-        <Text style={styles.quickActionTitle}>{title}</Text>
+        <Text style={[styles.quickActionTitle, { color: theme.textSecondary }]}>{title}</Text>
         {premium && <Text style={styles.premiumBadge}>⭐</Text>}
       </Card>
     </Pressable>
@@ -143,6 +147,7 @@ const ListCard: React.FC<{
   onArchive: () => void;
 }> = ({ list, index, onPress, onDelete, onArchive }) => {
   const [showActions, setShowActions] = useState(false);
+  const { theme } = useTheme();
 
   return (
     <Animated.View
@@ -160,13 +165,13 @@ const ListCard: React.FC<{
               <Text style={styles.iconText}>{list.icon}</Text>
             </View>
             <View style={styles.listInfo}>
-              <Text style={styles.listName}>{list.name}</Text>
-              <Text style={styles.listMeta}>
+              <Text style={[styles.listName, { color: theme.textSecondary }]}>{list.name}</Text>
+              <Text style={[styles.listMeta, { color: theme.textTertiary }]}>
                 {/* TODO: Show item count */}
                 0 items
               </Text>
             </View>
-            <Text style={styles.chevron}>›</Text>
+            <Text style={[styles.chevron, { color: theme.textTertiary }]}>›</Text>
           </View>
 
           {showActions && (
@@ -199,11 +204,9 @@ const shadowStyle = {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -216,7 +219,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.h1,
     fontWeight: typography.weightBold,
-    color: colors.text,
   },
   recentsIcon: {
     fontSize: 28,
@@ -244,7 +246,6 @@ const styles = StyleSheet.create({
   quickActionTitle: {
     fontSize: typography.bodySmall,
     fontWeight: typography.weightMedium,
-    color: colors.text,
   },
   premiumBadge: {
     position: 'absolute',
@@ -259,7 +260,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.h4,
     fontWeight: typography.weightSemibold,
-    color: colors.text,
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
@@ -276,12 +276,10 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: typography.h3,
     fontWeight: typography.weightSemibold,
-    color: colors.text,
     marginBottom: spacing.sm,
   },
   emptySubtext: {
     fontSize: typography.body,
-    color: colors.textSecondary,
   },
   listCard: {
     marginHorizontal: spacing.lg,
@@ -308,16 +306,13 @@ const styles = StyleSheet.create({
   listName: {
     fontSize: typography.h4,
     fontWeight: typography.weightSemibold,
-    color: colors.text,
     marginBottom: spacing.xs,
   },
   listMeta: {
     fontSize: typography.bodySmall,
-    color: colors.textSecondary,
   },
   chevron: {
     fontSize: 32,
-    color: colors.textTertiary,
   },
   actions: {
     flexDirection: 'row',
@@ -331,7 +326,6 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     ...shadowStyle,

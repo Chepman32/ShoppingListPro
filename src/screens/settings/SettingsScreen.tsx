@@ -89,16 +89,16 @@ export const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
             {t('settings.appearance.title')}
           </Text>
-          <Card style={{ backgroundColor: currentTheme.surface }}>
+          <Card>
             <TouchableOpacity
               style={styles.setting}
               onPress={() => setShowThemePicker(true)}
             >
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.appearance.theme')}
               </Text>
               <View style={styles.settingRight}>
-                <Text style={[styles.settingValue, { color: currentTheme.textSecondary }]}>
+                <Text style={[styles.settingValue, { color: currentTheme.textTertiary }]}>
                   {selectedTheme?.name}
                 </Text>
                 <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
@@ -109,11 +109,11 @@ export const SettingsScreen = () => {
               style={styles.setting}
               onPress={() => setShowLanguagePicker(true)}
             >
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.appearance.language')}
               </Text>
               <View style={styles.settingRight}>
-                <Text style={[styles.settingValue, { color: currentTheme.textSecondary }]}>
+                <Text style={[styles.settingValue, { color: currentTheme.textTertiary }]}>
                   {selectedLanguage?.nativeName}
                 </Text>
                 <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
@@ -127,9 +127,9 @@ export const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
             {t('settings.behavior.title')}
           </Text>
-          <Card style={{ backgroundColor: currentTheme.surface }}>
+          <Card>
             <View style={styles.setting}>
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.behavior.haptics')}
               </Text>
               <Switch
@@ -141,7 +141,7 @@ export const SettingsScreen = () => {
             </View>
             <View style={[styles.divider, { backgroundColor: currentTheme.borderLight }]} />
             <View style={styles.setting}>
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.behavior.sound')}
               </Text>
               <Switch
@@ -159,7 +159,7 @@ export const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
             {t('settings.data.title')}
           </Text>
-          <Card style={{ backgroundColor: currentTheme.surface }}>
+          <Card>
             <TouchableOpacity
               style={styles.setting}
               onPress={() => {
@@ -167,7 +167,7 @@ export const SettingsScreen = () => {
                 alert('Export Stats feature coming soon!');
               }}
             >
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.data.exportStats')}
               </Text>
               <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
@@ -180,12 +180,12 @@ export const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
             {t('settings.about.title')}
           </Text>
-          <Card style={{ backgroundColor: currentTheme.surface }}>
+          <Card>
             <View style={styles.setting}>
-              <Text style={[styles.settingLabel, { color: currentTheme.text }]}>
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
                 {t('settings.about.version')}
               </Text>
-              <Text style={[styles.settingValue, { color: currentTheme.textSecondary }]}>
+              <Text style={[styles.settingValue, { color: currentTheme.textTertiary }]}>
                 1.0.0
               </Text>
             </View>
@@ -219,17 +219,16 @@ export const SettingsScreen = () => {
                   <Card
                     style={[
                       styles.themeOption,
-                      { backgroundColor: currentTheme.surface },
                       theme.mode === themeMode && {
                         borderColor: currentTheme.primary,
                         borderWidth: 2,
                       },
                     ]}
                   >
-                    <Text style={[styles.themeName, { color: currentTheme.text }]}>
+                    <Text style={[styles.themeName, { color: currentTheme.textSecondary }]}>
                       {theme.name}
                     </Text>
-                    <Text style={[styles.themeDescription, { color: currentTheme.textSecondary }]}>
+                    <Text style={[styles.themeDescription, { color: currentTheme.textTertiary }]}>
                       {theme.description}
                     </Text>
                   </Card>
@@ -266,17 +265,16 @@ export const SettingsScreen = () => {
                   <Card
                     style={[
                       styles.languageOption,
-                      { backgroundColor: currentTheme.surface },
                       lang.code === language && {
                         borderColor: currentTheme.primary,
                         borderWidth: 2,
                       },
                     ]}
                   >
-                    <Text style={[styles.languageName, { color: currentTheme.text }]}>
+                    <Text style={[styles.languageName, { color: currentTheme.textSecondary }]}>
                       {lang.nativeName}
                     </Text>
-                    <Text style={[styles.languageSubname, { color: currentTheme.textSecondary }]}>
+                    <Text style={[styles.languageSubname, { color: currentTheme.textTertiary }]}>
                       {lang.name}
                     </Text>
                   </Card>

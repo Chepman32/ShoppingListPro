@@ -5,7 +5,8 @@
 
 import React, { memo } from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, borderRadius, spacing, shadows } from '../../theme';
+import { borderRadius, spacing, shadows } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 
 interface CardProps {
   children: React.ReactNode;
@@ -18,8 +19,10 @@ export const Card = memo<CardProps>(({
   style,
   elevation = 'md',
 }) => {
+  const { theme } = useTheme();
+
   return (
-    <View style={[styles.card, shadows[elevation], style]}>
+    <View style={[styles.card, { backgroundColor: theme.surface }, shadows[elevation], style]}>
       {children}
     </View>
   );
@@ -27,7 +30,6 @@ export const Card = memo<CardProps>(({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
   },

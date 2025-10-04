@@ -9,11 +9,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTemplatesStore } from '../../stores';
 import { Card } from '../../components/core';
-import { colors, typography, spacing } from '../../theme';
+import { typography, spacing } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import { Template } from '../../types/database';
 
 export const TemplatesScreen = () => {
   const navigation = useNavigation();
+  const { theme, themeMode } = useTheme();
   const { templates, loading, fetchTemplates, getPredefinedTemplates, getUserTemplates } =
     useTemplatesStore();
 
@@ -48,14 +50,14 @@ export const TemplatesScreen = () => {
     <TouchableOpacity onPress={() => handleTemplatePress(item)}>
       <Card style={styles.templateCard}>
         <View style={styles.templateHeader}>
-          <Text style={styles.templateName}>{item.name}</Text>
+          <Text style={[styles.templateName, { color: theme.textSecondary }]}>{item.name}</Text>
           {item.isPredefined && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>Built-in</Text>
+            <View style={[styles.badge, { backgroundColor: theme.primary + '20' }]}>
+              <Text style={[styles.badgeText, { color: theme.primary }]}>Built-in</Text>
             </View>
           )}
         </View>
-        <Text style={styles.templateMeta}>
+        <Text style={[styles.templateMeta, { color: theme.textTertiary }]}>
           {item.items.length} {item.items.length === 1 ? 'item' : 'items'}
         </Text>
       </Card>
@@ -64,7 +66,7 @@ export const TemplatesScreen = () => {
 
   const renderSectionHeader = ({ section }: any) => (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{section.title}</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
     </View>
   );
 
@@ -73,20 +75,20 @@ export const TemplatesScreen = () => {
 
     return (
       <View style={styles.emptyState}>
-        <Text style={styles.emptyText}>No custom templates yet</Text>
-        <TouchableOpacity onPress={handleCreatePress} style={styles.emptyButton}>
-          <Text style={styles.emptyButtonText}>Create your first template</Text>
+        <Text style={[styles.emptyText, { color: theme.textSecondary }]}>No custom templates yet</Text>
+        <TouchableOpacity onPress={handleCreatePress} style={[styles.emptyButton, { backgroundColor: theme.primary }]}>
+          <Text style={[styles.emptyButtonText, { color: theme.background }]}>Create your first template</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar barStyle="dark-content" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top']}>
+      <StatusBar barStyle={themeMode === 'dark' || themeMode === 'mono' ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
-        <Text style={styles.title}>Templates</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: theme.text }]}>Templates</Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
           Quick-add recurring items to your lists
         </Text>
       </View>
@@ -109,7 +111,6 @@ export const TemplatesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   header: {
     paddingHorizontal: spacing.lg,
@@ -119,12 +120,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: typography.h1,
     fontWeight: typography.weightBold,
-    color: colors.text,
     marginBottom: spacing.xs,
   },
   subtitle: {
     fontSize: typography.body,
-    color: colors.textSecondary,
   },
   listContent: {
     paddingHorizontal: spacing.lg,
@@ -139,18 +138,15 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: typography.h3,
     fontWeight: typography.weightSemibold,
-    color: colors.text,
   },
   createButton: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
-    backgroundColor: colors.primary,
     borderRadius: 16,
   },
   createButtonText: {
     fontSize: typography.bodySmall,
     fontWeight: typography.weightSemibold,
-    color: colors.background,
   },
   templateCard: {
     marginBottom: spacing.md,
@@ -164,11 +160,9 @@ const styles = StyleSheet.create({
   templateName: {
     fontSize: typography.h4,
     fontWeight: typography.weightSemibold,
-    color: colors.text,
     flex: 1,
   },
   badge: {
-    backgroundColor: colors.primary + '20',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs / 2,
     borderRadius: 12,
@@ -177,11 +171,9 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: typography.caption,
     fontWeight: typography.weightMedium,
-    color: colors.primary,
   },
   templateMeta: {
     fontSize: typography.bodySmall,
-    color: colors.textSecondary,
   },
   emptyState: {
     paddingVertical: spacing.xl,
@@ -189,18 +181,15 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: typography.body,
-    color: colors.textSecondary,
     marginBottom: spacing.md,
   },
   emptyButton: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    backgroundColor: colors.primary,
     borderRadius: 8,
   },
   emptyButtonText: {
     fontSize: typography.body,
     fontWeight: typography.weightSemibold,
-    color: colors.background,
   },
 });

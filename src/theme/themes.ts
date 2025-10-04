@@ -142,37 +142,37 @@ export const solarTheme: ThemeColors = {
   overlay: 'rgba(69, 26, 3, 0.4)',
 };
 
-// Mono Theme (gray shades)
+// Mono Theme (medium gray shades)
 export const monoTheme: ThemeColors = {
-  primary: '#404040',
-  primaryDark: '#262626',
-  primaryLight: '#737373',
+  primary: '#3A3A3A',
+  primaryDark: '#2A2A2A',
+  primaryLight: '#4A4A4A',
 
-  secondary: '#525252',
-  secondaryDark: '#404040',
-  secondaryLight: '#737373',
+  secondary: '#505050',
+  secondaryDark: '#3A3A3A',
+  secondaryLight: '#6A6A6A',
 
-  success: '#525252',
-  warning: '#737373',
-  error: '#262626',
-  info: '#525252',
+  success: '#4A4A4A',
+  warning: '#5A5A5A',
+  error: '#2A2A2A',
+  info: '#4A4A4A',
 
-  background: '#FFFFFF',
-  backgroundSecondary: '#F5F5F5',
-  backgroundTertiary: '#E5E5E5',
+  background: '#3A3A3A',
+  backgroundSecondary: '#4A4A4A',
+  backgroundTertiary: '#5A5A5A',
 
-  surface: '#FAFAFA',
-  surfaceSecondary: '#F5F5F5',
+  surface: '#C0C0C0',
+  surfaceSecondary: '#B0B0B0',
 
-  text: '#0A0A0A',
-  textSecondary: '#404040',
-  textTertiary: '#737373',
-  textDisabled: '#A3A3A3',
+  text: '#E5E5E5',
+  textSecondary: '#2A2A2A',
+  textTertiary: '#505050',
+  textDisabled: '#808080',
 
-  border: '#D4D4D4',
-  borderLight: '#E5E5E5',
+  border: '#5A5A5A',
+  borderLight: '#4E4E4E',
 
-  overlay: 'rgba(0, 0, 0, 0.4)',
+  overlay: 'rgba(0, 0, 0, 0.5)',
 };
 
 export const themes: Record<ThemeMode, ThemeColors> = {

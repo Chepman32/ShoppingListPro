@@ -88,26 +88,26 @@ export const MoreScreen = () => {
               onPress={() => handleOptionPress(option.screen)}
               activeOpacity={0.7}
             >
-              <Card style={[styles.optionCard, { backgroundColor: theme.surface }]}>
+              <Card style={styles.optionCard}>
                 <View style={styles.optionContent}>
                   <View style={styles.optionLeft}>
                     <View
                       style={[
                         styles.iconContainer,
-                        { backgroundColor: theme.primary + '20' },
+                        { backgroundColor: theme.backgroundSecondary },
                       ]}
                     >
                       <Text style={styles.icon}>{option.icon}</Text>
                     </View>
                     <View style={styles.optionText}>
-                      <Text style={[styles.optionTitle, { color: theme.text }]}>
+                      <Text style={[styles.optionTitle, { color: theme.textSecondary }]}>
                         {option.title}
                       </Text>
                       {option.description && (
                         <Text
                           style={[
                             styles.optionDescription,
-                            { color: theme.textSecondary },
+                            { color: theme.textTertiary },
                           ]}
                         >
                           {option.description}
