@@ -88,9 +88,6 @@ export const ListDetailScreen = () => {
       <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>‹</Text>
-        </Pressable>
         <Text style={styles.listName}>{list.name}</Text>
         <Pressable onPress={() => {}}>
           <Text style={styles.menuButton}>⋯</Text>
@@ -207,10 +204,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
-  },
-  backButton: {
-    fontSize: 36,
-    color: colors.primary,
   },
   listName: {
     fontSize: typography.h3,

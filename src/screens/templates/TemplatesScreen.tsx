@@ -65,11 +65,6 @@ export const TemplatesScreen = () => {
   const renderSectionHeader = ({ section }: any) => (
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{section.title}</Text>
-      {section.title === 'My Templates' && (
-        <TouchableOpacity onPress={handleCreatePress} style={styles.createButton}>
-          <Text style={styles.createButtonText}>+ Create New</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 

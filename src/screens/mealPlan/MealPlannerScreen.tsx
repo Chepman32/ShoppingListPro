@@ -114,11 +114,7 @@ export const MealPlannerScreen = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={[styles.backButton, { color: theme.primary }]}>‹ Back</Text>
-        </TouchableOpacity>
         <Text style={[styles.title, { color: theme.text }]}>Meal Planner</Text>
-        <View style={{ width: 60 }} />
       </View>
 
       {/* Week Navigation */}
@@ -314,16 +310,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
     paddingBottom: spacing.md,
-  },
-  backButton: {
-    fontSize: 18,
-    fontWeight: typography.weightSemibold,
+    alignItems: 'center',
   },
   title: {
     fontSize: typography.h2,

@@ -77,6 +77,7 @@ export const SettingsScreen = () => {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: currentTheme.background }]} edges={['top']}>
       <StatusBar barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'} />
+
       <ScrollView
         contentContainerStyle={[styles.contentContainer, { backgroundColor: currentTheme.background }]}
         showsVerticalScrollIndicator={false}

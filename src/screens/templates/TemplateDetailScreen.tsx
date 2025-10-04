@@ -121,11 +121,7 @@ export const TemplateDetailScreen = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>‹</Text>
-        </TouchableOpacity>
         <Text style={styles.title}>{template.name}</Text>
-        <View style={{ width: 32 }} />
       </View>
 
       <ScrollView
@@ -241,18 +237,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
-  },
-  backButton: {
-    fontSize: 36,
-    color: colors.primary,
-    fontWeight: typography.weightBold,
+    alignItems: 'center',
   },
   title: {
     fontSize: typography.h3,

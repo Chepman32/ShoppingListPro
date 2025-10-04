@@ -39,7 +39,8 @@ const ListsStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitleVisible: false,
         cardStyleInterpolator: ({ current }) => ({
           cardStyle: {
             opacity: current.progress,
@@ -47,16 +48,29 @@ const ListsStack = () => {
         }),
       }}
     >
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="ListDetail" component={ListDetailScreen} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false, title: 'Lists' }}
+      />
+      <Stack.Screen
+        name="ListDetail"
+        component={ListDetailScreen}
+        options={{ title: 'List' }}
+      />
       <Stack.Screen
         name="CreateList"
         component={CreateListScreen}
         options={{
           presentation: 'modal',
+          title: 'Create List',
         }}
       />
-      <Stack.Screen name="ShoppingMode" component={ShoppingModeScreen} />
+      <Stack.Screen
+        name="ShoppingMode"
+        component={ShoppingModeScreen}
+        options={{ title: 'Shopping Mode' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -65,7 +79,8 @@ const TemplatesStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitleVisible: false,
         cardStyleInterpolator: ({ current }) => ({
           cardStyle: {
             opacity: current.progress,
@@ -73,13 +88,22 @@ const TemplatesStack = () => {
         }),
       }}
     >
-      <Stack.Screen name="TemplatesHome" component={TemplatesScreen} />
-      <Stack.Screen name="TemplateDetail" component={TemplateDetailScreen} />
+      <Stack.Screen
+        name="TemplatesHome"
+        component={TemplatesScreen}
+        options={{ headerShown: false, title: 'Templates' }}
+      />
+      <Stack.Screen
+        name="TemplateDetail"
+        component={TemplateDetailScreen}
+        options={{ title: 'Template' }}
+      />
       <Stack.Screen
         name="CreateTemplate"
         component={CreateTemplateScreen}
         options={{
           presentation: 'modal',
+          title: 'New Template',
         }}
       />
     </Stack.Navigator>
@@ -90,7 +114,8 @@ const MealPlanStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitleVisible: false,
         cardStyleInterpolator: ({ current }) => ({
           cardStyle: {
             opacity: current.progress,
@@ -98,12 +123,17 @@ const MealPlanStack = () => {
         }),
       }}
     >
-      <Stack.Screen name="MealPlannerHome" component={MealPlannerScreen} />
+      <Stack.Screen
+        name="MealPlannerHome"
+        component={MealPlannerScreen}
+        options={{ headerShown: false, title: 'Meal Planner' }}
+      />
       <Stack.Screen
         name="AddMeal"
         component={AddMealScreen}
         options={{
           presentation: 'modal',
+          title: 'Add Meal',
         }}
       />
       <Stack.Screen
@@ -111,6 +141,7 @@ const MealPlanStack = () => {
         component={GenerateShoppingListScreen}
         options={{
           presentation: 'modal',
+          title: 'Generate List',
         }}
       />
     </Stack.Navigator>
@@ -121,7 +152,8 @@ const MoreStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerBackTitleVisible: false,
         cardStyleInterpolator: ({ current }) => ({
           cardStyle: {
             opacity: current.progress,
@@ -129,11 +161,31 @@ const MoreStack = () => {
         }),
       }}
     >
-      <Stack.Screen name="MoreHome" component={MoreScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Favorites" component={FavoritesScreen} />
-      <Stack.Screen name="Stats" component={StatsScreen} />
-      <Stack.Screen name="About" component={AboutScreen} />
+      <Stack.Screen
+        name="MoreHome"
+        component={MoreScreen}
+        options={{ headerShown: false, title: 'More' }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: 'Settings' }}
+      />
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{ title: 'Favorites' }}
+      />
+      <Stack.Screen
+        name="Stats"
+        component={StatsScreen}
+        options={{ title: 'Statistics' }}
+      />
+      <Stack.Screen
+        name="About"
+        component={AboutScreen}
+        options={{ title: 'About' }}
+      />
     </Stack.Navigator>
   );
 };
