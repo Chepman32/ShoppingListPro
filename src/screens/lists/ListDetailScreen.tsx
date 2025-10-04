@@ -203,8 +203,6 @@ export const ListDetailScreen = () => {
   const filteredItems = normalizedQuery
     ? items.filter((item) => item.name.toLowerCase().includes(normalizedQuery))
     : items;
-  const displayedUncheckedItems = filteredItems.filter((i) => !i.isChecked);
-  const displayedCheckedItems = filteredItems.filter((i) => i.isChecked);
   const fallbackMenuTop = insets.top + spacing.xl;
   const menuPositionStyle = {
     top: menuPosition ? Math.max(fallbackMenuTop, menuPosition.top) : fallbackMenuTop,
@@ -281,11 +279,15 @@ export const ListDetailScreen = () => {
           value={newItemName}
           onChangeText={(text) => {
             setNewItemName(text);
-            setShowSuggestions(text.length > 0 || text === '');
+            setShowSuggestions(text.trim().length > 0);
           }}
           placeholder="Add item..."
           onSubmitEditing={() => handleAddItem()}
-          onFocus={() => setShowSuggestions(true)}
+          onFocus={() => {
+            if (newItemName.trim().length > 0) {
+              setShowSuggestions(true);
+            }
+          }}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           returnKeyType="done"
           style={styles.addItemInput}
@@ -294,11 +296,7 @@ export const ListDetailScreen = () => {
         {/* Suggestions */}
         {showSuggestions && !isSearching && suggestions.length > 0 && (
           <View style={styles.suggestionsContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.suggestionsScroll}
-            >
+            <View style={styles.suggestionsList}>
               {suggestions.map((suggestion, index) => (
                 <TouchableOpacity
                   key={index}
@@ -308,7 +306,7 @@ export const ListDetailScreen = () => {
                   <Text style={styles.suggestionText}>{suggestion}</Text>
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </View>
           </View>
         )}
       </View>
@@ -328,7 +326,7 @@ export const ListDetailScreen = () => {
           </View>
         ) : (
           <FlashList
-            data={[...displayedUncheckedItems, ...displayedCheckedItems]}
+            data={filteredItems}
             renderItem={({ item, index }) => (
               <ItemRow
                 item={item}
@@ -398,7 +396,12 @@ const ItemRow: React.FC<{
         >
           {item.name}
         </Text>
-        <Text style={styles.itemMeta}>
+        <Text
+          style={[
+            styles.itemMeta,
+            item.isChecked && styles.itemMetaChecked,
+          ]}
+        >
           {item.quantity} {item.unit}
         </Text>
       </View>
@@ -510,16 +513,19 @@ const styles = StyleSheet.create({
   suggestionsContainer: {
     marginTop: spacing.sm,
   },
-  suggestionsScroll: {
+  suggestionsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     paddingVertical: spacing.xs,
-    gap: spacing.sm,
+    marginHorizontal: -spacing.xs,
   },
   suggestionChip: {
     backgroundColor: colors.primary + '15',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: 16,
-    marginRight: spacing.sm,
+    marginHorizontal: spacing.xs,
+    marginBottom: spacing.xs,
     borderWidth: 1,
     borderColor: colors.primary + '30',
   },
@@ -587,13 +593,15 @@ const styles = StyleSheet.create({
     fontWeight: typography.weightMedium,
   },
   itemNameChecked: {
-    textDecorationLine: 'line-through',
     color: colors.textTertiary,
   },
   itemMeta: {
     fontSize: typography.bodySmall,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+  },
+  itemMetaChecked: {
+    color: colors.textTertiary,
   },
   deleteButton: {
     width: 32,

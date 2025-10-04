@@ -19,13 +19,15 @@ interface CheckboxProps {
   onChange: (checked: boolean) => void;
   size?: number;
   color?: string;
+  uncheckedColor?: string;
 }
 
-export const Checkbox = memo<CheckboxProps>(({
+export const Checkbox = memo<CheckboxProps>(({ 
   checked,
   onChange,
   size = 36,
   color = colors.primary,
+  uncheckedColor = colors.borderLight,
 }) => {
   const progress = useSharedValue(checked ? 1 : 0);
   const rotation = useSharedValue(0);
@@ -58,9 +60,16 @@ export const Checkbox = memo<CheckboxProps>(({
             cx={size / 2}
             cy={size / 2}
             r={size / 2 - 2}
-            color={checked ? color : 'transparent'}
+            color={checked ? color : colors.surface}
+            style="fill"
+          />
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={size / 2 - 2}
+            color={checked ? color : uncheckedColor}
             style="stroke"
-            strokeWidth={2}
+            strokeWidth={checked ? 0 : 2}
           />
           {checked && (
             <Path
