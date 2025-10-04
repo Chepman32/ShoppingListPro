@@ -24,10 +24,21 @@ import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Input, Checkbox } from '../../components/core';
 import { database, List, ListItem } from '../../database';
-import { colors, typography, spacing } from '../../theme';
+import { colors, typography, spacing, borderRadius } from '../../theme';
 import { Q } from '@nozbe/watermelondb';
-import { useListsStore, useSuggestionsStore } from '../../stores';
+import { useListsStore, useSuggestionsStore, useFavoritesStore } from '../../stores';
 import type { View as RNView } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import type { FavoriteListEntry } from '../../types/favorites';
+
+const buildListFavoriteEntry = (list: List, favoritedAt?: string): FavoriteListEntry => ({
+  type: 'list',
+  id: list.id,
+  name: list.name,
+  icon: list.icon,
+  color: list.color,
+  favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
 
 export const ListDetailScreen = () => {
   const route = useRoute();
@@ -49,10 +60,32 @@ export const ListDetailScreen = () => {
   const suggestions = getSuggestions(newItemName, 8);
   const insets = useSafeAreaInsets();
   const menuTriggerRef = useRef<RNView | null>(null);
+  const { t } = useTranslation();
+
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const favorites = useFavoritesStore((state) => state.favorites);
+
+  const favoriteEntry = list
+    ? favorites.find((fav) => fav.type === 'list' && fav.id === list.id)
+    : undefined;
+  const isListFavorite = Boolean(favoriteEntry);
 
   useEffect(() => {
     loadListAndItems();
   }, [listId]);
+
+  useEffect(() => {
+    if (!list || !favoriteEntry) return;
+
+    if (
+      favoriteEntry.name !== list.name ||
+      favoriteEntry.icon !== list.icon ||
+      favoriteEntry.color !== list.color
+    ) {
+      addFavorite(buildListFavoriteEntry(list, favoriteEntry.favoritedAt));
+    }
+  }, [list, favoriteEntry, addFavorite]);
 
   const loadListAndItems = async () => {
     const loadedList = await database.get<List>('lists').find(listId);
@@ -110,6 +143,7 @@ export const ListDetailScreen = () => {
       'Product' as never,
       {
         product: {
+          id: item.id,
           name: item.name,
           quantity: String(item.quantity ?? 1),
           unit: item.unit || 'pcs',
@@ -120,8 +154,22 @@ export const ListDetailScreen = () => {
           attachments: [],
           lastUpdated: new Date().toISOString(),
         },
+        listId: list?.id,
+        listItemId: item.id,
+        listName: list?.name,
       } as never
     );
+  };
+
+  const handleToggleFavoriteList = () => {
+    if (!list) return;
+
+    if (isListFavorite) {
+      removeFavorite('list', list.id);
+      return;
+    }
+
+    addFavorite(buildListFavoriteEntry(list));
   };
 
   const closeMenu = () => {
@@ -245,6 +293,18 @@ export const ListDetailScreen = () => {
       <View style={styles.header}>
         <Text style={styles.listName}>{list.name}</Text>
         <View style={styles.headerActions}>
+          <Pressable
+            onPress={handleToggleFavoriteList}
+            style={[styles.favoriteButton, isListFavorite && styles.favoriteButtonActive]}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isListFavorite ? t('favorites.removeFavorite') : t('favorites.addFavorite')
+            }
+          >
+            <Text style={[styles.favoriteIcon, isListFavorite && styles.favoriteIconActive]}>
+              {isListFavorite ? '★' : '☆'}
+            </Text>
+          </Pressable>
           <Pressable onPress={() => setIsEditing((prev) => !prev)} style={styles.editButton}>
             <Text style={[styles.editButtonText, isEditing && styles.editButtonTextActive]}>
               {isEditing ? 'Done' : 'Edit'}
@@ -473,6 +533,22 @@ const styles = StyleSheet.create({
     fontSize: typography.h3,
     fontWeight: typography.weightBold,
     color: colors.text,
+  },
+  favoriteButton: {
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs / 2,
+    marginRight: spacing.sm,
+    borderRadius: borderRadius.sm,
+  },
+  favoriteButtonActive: {
+    backgroundColor: colors.primary + '20',
+  },
+  favoriteIcon: {
+    fontSize: typography.h4,
+    color: colors.textSecondary,
+  },
+  favoriteIconActive: {
+    color: colors.primary,
   },
   editButton: {
     paddingHorizontal: spacing.sm,

@@ -16,12 +16,26 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { useTemplatesStore, useListsStore } from '../../stores';
+import { useTemplatesStore, useListsStore, useFavoritesStore } from '../../stores';
 import { Button, Card } from '../../components/core';
 import { colors, typography, spacing } from '../../theme';
 import { RootStackParamList } from '../../types';
 import { database } from '../../database';
 import ListItem from '../../database/models/ListItem';
+import { useTranslation } from 'react-i18next';
+import type { FavoriteTemplateEntry } from '../../types/favorites';
+import type { Template } from '../../types/database';
+
+const buildTemplateFavoriteEntry = (
+  template: Template,
+  favoritedAt?: string
+): FavoriteTemplateEntry => ({
+  type: 'template',
+  id: template.id,
+  name: template.name,
+  isPredefined: Boolean(template.isPredefined),
+  favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
 
 type TemplateDetailRouteProp = RouteProp<RootStackParamList, 'TemplateDetail'>;
 
@@ -32,15 +46,36 @@ export const TemplateDetailScreen = () => {
 
   const { getTemplate, deleteTemplate } = useTemplatesStore();
   const { lists, fetchLists } = useListsStore();
+  const { t } = useTranslation();
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const favorites = useFavoritesStore((state) => state.favorites);
 
   const [showListPicker, setShowListPicker] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
   const template = getTemplate(templateId);
+  const favoriteEntry = template
+    ? favorites.find(
+        (fav): fav is FavoriteTemplateEntry => fav.type === 'template' && fav.id === template.id
+      )
+    : undefined;
+  const isTemplateFavorite = Boolean(favoriteEntry);
 
   useEffect(() => {
     fetchLists();
   }, [fetchLists]);
+
+  useEffect(() => {
+    if (!template || !favoriteEntry) return;
+
+    if (
+      favoriteEntry.name !== template.name ||
+      favoriteEntry.isPredefined !== template.isPredefined
+    ) {
+      addFavorite(buildTemplateFavoriteEntry(template, favoriteEntry.favoritedAt));
+    }
+  }, [template, favoriteEntry, addFavorite]);
 
   if (!template) {
     return (
@@ -69,6 +104,17 @@ export const TemplateDetailScreen = () => {
         },
       ]
     );
+  };
+
+  const handleToggleFavorite = () => {
+    if (!template) return;
+
+    if (isTemplateFavorite) {
+      removeFavorite('template', template.id);
+      return;
+    }
+
+    addFavorite(buildTemplateFavoriteEntry(template));
   };
 
   const handleAddToList = async (listId: string) => {
@@ -122,6 +168,20 @@ export const TemplateDetailScreen = () => {
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
         <Text style={styles.title}>{template.name}</Text>
+        <Pressable
+          onPress={handleToggleFavorite}
+          style={[styles.favoriteButton, isTemplateFavorite && styles.favoriteButtonActive]}
+          accessibilityRole="button"
+          accessibilityLabel={
+            isTemplateFavorite ? t('favorites.removeFavorite') : t('favorites.addFavorite')
+          }
+        >
+          <Text
+            style={[styles.favoriteIcon, isTemplateFavorite && styles.favoriteIconActive]}
+          >
+            {isTemplateFavorite ? '★' : '☆'}
+          </Text>
+        </Pressable>
       </View>
 
       <ScrollView
@@ -241,12 +301,29 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: typography.h3,
     fontWeight: typography.weightBold,
     color: colors.text,
+  },
+  favoriteButton: {
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs / 2,
+    borderRadius: 16,
+  },
+  favoriteButtonActive: {
+    backgroundColor: colors.primary + '20',
+  },
+  favoriteIcon: {
+    fontSize: typography.h4,
+    color: colors.textSecondary,
+  },
+  favoriteIconActive: {
+    color: colors.primary,
   },
   content: {
     flex: 1,

@@ -57,8 +57,6 @@
     "favoritesDesc": "Your favorite items and lists",
     "stats": "Statistics",
     "statsDesc": "Shopping insights and analytics",
-    "product": "Product",
-    "productDesc": "Manage product details and attachments",
     "about": "About",
     "aboutDesc": "App information and credits"
   },
@@ -86,7 +84,15 @@
   },
   "favorites": {
     "noFavorites": "No favorites yet",
-    "addFavoritesHint": "Star items and lists to add them here"
+    "addFavoritesHint": "Star items and lists to add them here",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "listsSection": "Lists",
+    "templatesSection": "Templates",
+    "productsSection": "Products",
+    "builtInTemplate": "Built-in template",
+    "customTemplate": "Custom template",
+    "favoritedOn": "Favorited on {{date}}"
   },
   "stats": {
     "totalLists": "Total Lists",

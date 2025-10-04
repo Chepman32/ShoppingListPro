@@ -3,7 +3,10 @@
  * Central export point for all TypeScript types
  */
 
+import type { ProductNavigationParams } from './product';
+
 export * from './database';
+export * from './product';
 export type {
   Theme,
   ColorName,
@@ -30,6 +33,7 @@ export type RootStackParamList = {
   Favorites: undefined;
   Stats: undefined;
   About: undefined;
+  Product: ProductNavigationParams;
 };
 
 // Component prop types

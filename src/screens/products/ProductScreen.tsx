@@ -3,7 +3,7 @@
  * Allows viewing and editing product information with attachments
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -19,35 +19,56 @@ import { useRoute } from '@react-navigation/native';
 import { Input, Button } from '../../components/core';
 import { colors, spacing, typography, borderRadius } from '../../theme';
 import { useTranslation } from 'react-i18next';
+import { useFavoritesStore } from '../../stores';
+import type { FavoriteProductEntry } from '../../types/favorites';
+import type {
+  ProductDetails,
+  ProductAttachment,
+  ProductAttachmentType,
+  ProductNavigationParams,
+} from '../../types/product';
 
 const measurementUnits = ['kg', 'g', 'lb', 'oz', 'l', 'ml', 'pcs', 'pack'];
 
-type AttachmentType = 'link' | 'photo' | 'note' | 'location' | 'file';
-type AttachmentInput = Partial<Attachment> & { type?: AttachmentType };
+type AttachmentInput = Partial<ProductAttachment> & { type?: ProductAttachmentType };
 type ImagePickerModule = typeof import('react-native-image-picker');
 
-interface Attachment {
-  id: string;
-  type: AttachmentType;
-  label: string;
-  value?: string;
-}
+const createFallbackProductId = (details: ProductDetails) => {
+  const normalize = (value: string | undefined, fallback: string) =>
+    value?.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') || fallback;
 
-interface Product {
-  name: string;
-  brand?: string;
-  sku?: string;
-  imageUri?: string;
-  quantity: string;
-  unit: string;
-  category?: string;
-  notes?: string;
-  description?: string;
-  attachments: Attachment[];
-  lastUpdated: string;
-}
+  const normalizedName = normalize(details.name, 'product');
+  const normalizedUnit = normalize(details.unit, 'unit');
+  const quantity = details.quantity?.trim() || '1';
 
-const attachmentTypeMeta: Record<AttachmentType, { label: string; icon: string; placeholder: string }>
+  return `${normalizedName}-${normalizedUnit}-${quantity}`;
+};
+
+const cloneProductDetails = (details: ProductDetails): ProductDetails => ({
+  ...details,
+  attachments: details.attachments.map((attachment) => ({ ...attachment })),
+});
+
+const buildProductFavoriteEntry = (
+  details: ProductDetails,
+  params: ProductNavigationParams | undefined,
+  favoriteId: string,
+  favoritedAt?: string
+): FavoriteProductEntry => ({
+  type: 'product',
+  id: favoriteId,
+  name: details.name,
+  product: cloneProductDetails(details),
+  sourceListId: params?.listId,
+  sourceListName: params?.listName,
+  sourceListItemId: params?.listItemId,
+  favoritedAt: favoritedAt ?? new Date().toISOString(),
+});
+
+const attachmentTypeMeta: Record<
+  ProductAttachmentType,
+  { label: string; icon: string; placeholder: string }
+>
   = {
     link: { label: 'Link', icon: '🔗', placeholder: 'https://example.com' },
     photo: { label: 'Photo', icon: '📷', placeholder: 'Photo description' },
@@ -73,7 +94,7 @@ const getImagePicker = (): ImagePickerModule | null => {
   }
 };
 
-const DEFAULT_PRODUCT_TEMPLATE: Product = {
+const DEFAULT_PRODUCT_TEMPLATE: ProductDetails = {
   name: 'Organic Honeycrisp Apples',
   brand: 'Nature Farms',
   sku: 'APL-001',
@@ -99,19 +120,19 @@ const DEFAULT_PRODUCT_TEMPLATE: Product = {
   lastUpdated: new Date().toISOString(),
 };
 
-const cloneDefaultProduct = (): Product => ({
+const cloneDefaultProduct = (): ProductDetails => ({
   ...DEFAULT_PRODUCT_TEMPLATE,
   attachments: DEFAULT_PRODUCT_TEMPLATE.attachments.map((attachment) => ({ ...attachment })),
   lastUpdated: new Date().toISOString(),
 });
 
-const normalizeAttachments = (attachments?: AttachmentInput[]): Attachment[] => {
+const normalizeAttachments = (attachments?: AttachmentInput[]): ProductAttachment[] => {
   if (!attachments || attachments.length === 0) {
     return [];
   }
 
   return attachments.map((attachment, index) => {
-    const type = (attachment.type ?? 'note') as AttachmentType;
+    const type = (attachment.type ?? 'note') as ProductAttachmentType;
     const meta = attachmentTypeMeta[type];
 
     return {
@@ -123,7 +144,7 @@ const normalizeAttachments = (attachments?: AttachmentInput[]): Attachment[] => 
   });
 };
 
-const buildProductState = (overrides?: Partial<Product>): Product => {
+const buildProductState = (overrides?: Partial<ProductDetails>): ProductDetails => {
   const base = cloneDefaultProduct();
 
   if (!overrides) {
@@ -142,6 +163,7 @@ const buildProductState = (overrides?: Partial<Product>): Product => {
   return {
     ...base,
     ...overrides,
+    id: overrides.id ?? base.id,
     quantity: normalizedQuantity || '1',
     unit: overrides.unit ?? base.unit,
     attachments,
@@ -152,21 +174,86 @@ const buildProductState = (overrides?: Partial<Product>): Product => {
 export const ProductScreen = () => {
   const { t } = useTranslation();
   const route = useRoute();
-  const params = route.params as { product?: Partial<Product> } | undefined;
-  const derivedProduct = useMemo(() => buildProductState(params?.product), [params]);
+  const params = route.params as ProductNavigationParams | undefined;
+  const derivedProduct = useMemo(
+    () => buildProductState(params?.product),
+    [params?.product]
+  );
 
-  const [product, setProduct] = useState<Product>(derivedProduct);
-  const [draft, setDraft] = useState<Product>(derivedProduct);
+  const [product, setProduct] = useState<ProductDetails>(derivedProduct);
+  const [draft, setDraft] = useState<ProductDetails>(derivedProduct);
   const [isEditing, setIsEditing] = useState(false);
   const [isAttachmentModalVisible, setAttachmentModalVisible] = useState(false);
-  const [newAttachmentType, setNewAttachmentType] = useState<AttachmentType>('note');
+  const [newAttachmentType, setNewAttachmentType] = useState<ProductAttachmentType>('note');
   const [newAttachmentLabel, setNewAttachmentLabel] = useState('');
   const [newAttachmentValue, setNewAttachmentValue] = useState('');
+
+  const favoriteIdRef = useRef<string>(
+    params?.listItemId ??
+      params?.product?.id ??
+      derivedProduct.id ??
+      createFallbackProductId(derivedProduct)
+  );
+
+  useEffect(() => {
+    const explicitId = params?.listItemId ?? params?.product?.id ?? derivedProduct.id;
+    if (explicitId && favoriteIdRef.current !== explicitId) {
+      favoriteIdRef.current = explicitId;
+    }
+  }, [params?.listItemId, params?.product?.id, derivedProduct.id]);
+
+  const addFavorite = useFavoritesStore((state) => state.addFavorite);
+  const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
+  const favorites = useFavoritesStore((state) => state.favorites);
+
+  const favoriteId = favoriteIdRef.current;
+  const favoriteEntry = favorites.find(
+    (fav): fav is FavoriteProductEntry => fav.type === 'product' && fav.id === favoriteId
+  );
+  const isProductFavorite = Boolean(favoriteEntry);
+  const contextListId = params?.listId;
+  const contextListName = params?.listName;
+  const contextListItemId = params?.listItemId;
 
   useEffect(() => {
     setProduct(derivedProduct);
     setDraft(derivedProduct);
   }, [derivedProduct]);
+
+  useEffect(() => {
+    if (!favoriteEntry) return;
+
+    const updatedEntry = buildProductFavoriteEntry(
+      product,
+      {
+        listId: contextListId,
+        listName: contextListName,
+        listItemId: contextListItemId,
+      },
+      favoriteId,
+      favoriteEntry.favoritedAt
+    );
+
+    const currentSignature = JSON.stringify(favoriteEntry.product);
+    const updatedSignature = JSON.stringify(updatedEntry.product);
+
+    if (
+      favoriteEntry.name !== updatedEntry.name ||
+      favoriteEntry.sourceListId !== updatedEntry.sourceListId ||
+      favoriteEntry.sourceListName !== updatedEntry.sourceListName ||
+      currentSignature !== updatedSignature
+    ) {
+      addFavorite(updatedEntry);
+    }
+  }, [
+    favoriteEntry,
+    product,
+    contextListId,
+    contextListName,
+    contextListItemId,
+    favoriteId,
+    addFavorite,
+  ]);
 
   const lastUpdatedLabel = useMemo(() => {
     const date = new Date(product.lastUpdated);
@@ -193,7 +280,7 @@ export const ProductScreen = () => {
     resetAttachmentDraft();
   };
 
-  const updateDraft = (updates: Partial<Product>) => {
+  const updateDraft = (updates: Partial<ProductDetails>) => {
     setDraft((prev) => ({ ...prev, ...updates }));
   };
 
@@ -209,7 +296,7 @@ export const ProductScreen = () => {
       return;
     }
 
-    const attachment: Attachment = {
+    const attachment: ProductAttachment = {
       id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       type: newAttachmentType,
       label: newAttachmentLabel.trim(),
@@ -222,6 +309,27 @@ export const ProductScreen = () => {
 
   const handleRemoveAttachment = (id: string) => {
     updateDraft({ attachments: draft.attachments.filter((att) => att.id !== id) });
+  };
+
+  const handleToggleFavorite = () => {
+    const currentId = favoriteIdRef.current;
+
+    if (isProductFavorite) {
+      removeFavorite('product', currentId);
+      return;
+    }
+
+    addFavorite(
+      buildProductFavoriteEntry(
+        product,
+        {
+          listId: contextListId,
+          listName: contextListName,
+          listItemId: contextListItemId,
+        },
+        currentId
+      )
+    );
   };
 
   const handleChooseImage = async () => {
@@ -270,7 +378,7 @@ export const ProductScreen = () => {
     Alert.alert(t('product.productImage'), t('product.updatePhoto'), buttons);
   };
 
-  const renderAttachment = (attachment: Attachment, isDraft = false) => {
+  const renderAttachment = (attachment: ProductAttachment, isDraft = false) => {
     const meta = attachmentTypeMeta[attachment.type];
     return (
       <View key={attachment.id} style={styles.attachmentCard}>
@@ -299,20 +407,38 @@ export const ProductScreen = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{activeProduct.name}</Text>
-          {isEditing ? (
-            <View style={styles.editActions}>
-              <Button variant="ghost" size="small" onPress={cancelEdit}>
-                {t('common.cancel')}
+          <View style={styles.headerActions}>
+            <Pressable
+              onPress={handleToggleFavorite}
+              style={[styles.favoriteButton, isProductFavorite && styles.favoriteButtonActive]}
+              accessibilityRole="button"
+              accessibilityLabel={
+                isProductFavorite
+                  ? t('favorites.removeFavorite')
+                  : t('favorites.addFavorite')
+              }
+            >
+              <Text
+                style={[styles.favoriteIcon, isProductFavorite && styles.favoriteIconActive]}
+              >
+                {isProductFavorite ? '★' : '☆'}
+              </Text>
+            </Pressable>
+            {isEditing ? (
+              <View style={styles.editActions}>
+                <Button variant="ghost" size="small" onPress={cancelEdit}>
+                  {t('common.cancel')}
+                </Button>
+                <Button variant="primary" size="small" onPress={saveProduct}>
+                  {t('common.save')}
+                </Button>
+              </View>
+            ) : (
+              <Button variant="outline" size="small" onPress={beginEdit}>
+                {t('common.edit')}
               </Button>
-              <Button variant="primary" size="small" onPress={saveProduct}>
-                {t('common.save')}
-              </Button>
-            </View>
-          ) : (
-            <Button variant="outline" size="small" onPress={beginEdit}>
-              {t('common.edit')}
-            </Button>
-          )}
+            )}
+          </View>
         </View>
 
         <Pressable
@@ -474,7 +600,7 @@ export const ProductScreen = () => {
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>{t('product.addAttachment')}</Text>
             <View style={styles.modalTypesRow}>
-              {(Object.keys(attachmentTypeMeta) as AttachmentType[]).map((type) => {
+              {(Object.keys(attachmentTypeMeta) as ProductAttachmentType[]).map((type) => {
                 const meta = attachmentTypeMeta[type];
                 const isActive = newAttachmentType === type;
                 return (
@@ -535,6 +661,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  favoriteButton: {
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs / 2,
+    borderRadius: borderRadius.sm,
+  },
+  favoriteButtonActive: {
+    backgroundColor: colors.primary + '20',
+  },
+  favoriteIcon: {
+    fontSize: typography.h4,
+    color: colors.textSecondary,
+  },
+  favoriteIconActive: {
+    color: colors.primary,
   },
   title: {
     fontSize: typography.h2,

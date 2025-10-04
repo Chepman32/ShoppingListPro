@@ -156,11 +156,6 @@ const MoreStack = () => {
         options={{ title: 'Statistics' }}
       />
       <Stack.Screen
-        name="Product"
-        component={ProductScreen}
-        options={{ title: 'Product' }}
-      />
-      <Stack.Screen
         name="About"
         component={AboutScreen}
         options={{ title: 'About' }}
