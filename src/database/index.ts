@@ -7,6 +7,7 @@ import { Database } from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 
 import { schema } from './schemas';
+import { migrations } from './migrations';
 import {
   List,
   ListItem,
@@ -20,8 +21,8 @@ import {
 // Create the adapter
 const adapter = new SQLiteAdapter({
   schema,
+  migrations,
   // dbName: 'ListFlow', // Optional: specify database name
-  // migrations, // TODO: Add migrations when schema changes
 });
 
 // Create the database

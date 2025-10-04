@@ -68,6 +68,7 @@ const ListsStack = () => {
         component={CreateListScreen}
         options={{
           presentation: 'modal',
+          headerShown: false,
           title: 'Create List',
         }}
       />

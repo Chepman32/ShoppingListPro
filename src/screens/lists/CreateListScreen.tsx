@@ -48,11 +48,11 @@ export const CreateListScreen = () => {
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.closeButtonContainer}>
           <Text style={styles.closeButton}>✕</Text>
         </Pressable>
         <Text style={styles.title}>New List</Text>
-        <View style={{ width: 32 }} />
+        <View style={{ width: 44 }} />
       </View>
 
       <ScrollView
@@ -128,9 +128,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
   },
+  closeButtonContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: colors.backgroundSecondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   closeButton: {
-    fontSize: 28,
-    color: colors.textSecondary,
+    fontSize: 24,
+    color: colors.text,
+    fontWeight: typography.weightMedium,
   },
   title: {
     fontSize: typography.h3,
