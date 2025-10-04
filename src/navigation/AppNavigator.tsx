@@ -5,7 +5,8 @@
 
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import type { StackNavigationOptions } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/lists/HomeScreen';
 import { ListDetailScreen } from '../screens/lists/ListDetailScreen';
@@ -36,19 +37,16 @@ const createEmojiIcon = (emoji: string) =>
     </Text>
   );
 
+const baseStackScreenOptions: StackNavigationOptions = {
+  headerShown: true,
+  headerBackTitleVisible: false,
+  animationEnabled: true,
+  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+};
+
 const ListsStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerBackTitleVisible: false,
-        cardStyleInterpolator: ({ current }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
-      }}
-    >
+    <Stack.Navigator screenOptions={baseStackScreenOptions}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -83,17 +81,7 @@ const ListsStack = () => {
 
 const TemplatesStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerBackTitleVisible: false,
-        cardStyleInterpolator: ({ current }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
-      }}
-    >
+    <Stack.Navigator screenOptions={baseStackScreenOptions}>
       <Stack.Screen
         name="TemplatesHome"
         component={TemplatesScreen}
@@ -118,17 +106,7 @@ const TemplatesStack = () => {
 
 const MealPlanStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerBackTitleVisible: false,
-        cardStyleInterpolator: ({ current }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
-      }}
-    >
+    <Stack.Navigator screenOptions={baseStackScreenOptions}>
       <Stack.Screen
         name="MealPlannerHome"
         component={MealPlannerScreen}
@@ -156,17 +134,7 @@ const MealPlanStack = () => {
 
 const MoreStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerBackTitleVisible: false,
-        cardStyleInterpolator: ({ current }) => ({
-          cardStyle: {
-            opacity: current.progress,
-          },
-        }),
-      }}
-    >
+    <Stack.Navigator screenOptions={baseStackScreenOptions}>
       <Stack.Screen
         name="MoreHome"
         component={MoreScreen}
