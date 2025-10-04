@@ -4,9 +4,21 @@
  * Based on SDD Section 6.4
  */
 
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Modal,
+  Share,
+  Alert,
+  Dimensions,
+} from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -14,7 +26,8 @@ import { Input, Checkbox } from '../../components/core';
 import { database, List, ListItem } from '../../database';
 import { colors, typography, spacing } from '../../theme';
 import { Q } from '@nozbe/watermelondb';
-import { useSuggestionsStore } from '../../stores';
+import { useListsStore, useSuggestionsStore } from '../../stores';
+import type { View as RNView } from 'react-native';
 
 export const ListDetailScreen = () => {
   const route = useRoute();
@@ -25,9 +38,17 @@ export const ListDetailScreen = () => {
   const [items, setItems] = useState<ListItem[]>([]);
   const [newItemName, setNewItemName] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
 
   const { getSuggestions, addRecentItem } = useSuggestionsStore();
+  const deleteList = useListsStore((state) => state.deleteList);
   const suggestions = getSuggestions(newItemName, 8);
+  const insets = useSafeAreaInsets();
+  const menuTriggerRef = useRef<RNView | null>(null);
 
   useEffect(() => {
     loadListAndItems();
@@ -84,8 +105,111 @@ export const ListDetailScreen = () => {
     loadListAndItems();
   };
 
-  const uncheckedItems = items.filter((i) => !i.isChecked);
-  const checkedItems = items.filter((i) => i.isChecked);
+  const closeMenu = () => {
+    setIsMenuVisible(false);
+    setMenuPosition(null);
+  };
+
+  const handleShareList = async () => {
+    if (!list) return;
+
+    const unchecked = items.filter((item) => !item.isChecked);
+    const completed = items.filter((item) => item.isChecked);
+
+    const messageLines: string[] = [list.name];
+
+    if (unchecked.length > 0) {
+      messageLines.push('', 'To Buy:');
+      unchecked.forEach((item) => {
+        const quantityLabel = item.quantity ? ` (${item.quantity} ${item.unit})` : '';
+        messageLines.push(`- ${item.name}${quantityLabel}`);
+      });
+    }
+
+    if (completed.length > 0) {
+      messageLines.push('', 'Completed:');
+      completed.forEach((item) => {
+        messageLines.push(`- ${item.name}`);
+      });
+    }
+
+    if (messageLines.length === 1) {
+      messageLines.push('', 'No items yet');
+    }
+
+    try {
+      await Share.share({
+        message: messageLines.join('\n'),
+        title: list.name,
+      });
+    } catch (error) {
+      console.error('Error sharing list:', error);
+    } finally {
+      closeMenu();
+    }
+  };
+
+  const handleSearchPress = () => {
+    closeMenu();
+    setIsSearching(true);
+    setShowSuggestions(false);
+  };
+
+  const handleCancelSearch = () => {
+    setIsSearching(false);
+    setSearchQuery('');
+  };
+
+  const handleDeleteListPress = () => {
+    if (!list) return;
+
+    closeMenu();
+
+    Alert.alert('Delete List', `Are you sure you want to delete "${list.name}"?`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          await deleteList(list.id);
+          closeMenu();
+          navigation.goBack();
+        },
+      },
+    ]);
+  };
+
+  const handleMenuOpen = () => {
+    setMenuPosition(null);
+    const node = menuTriggerRef.current;
+
+    if (node && typeof node.measureInWindow === 'function') {
+      node.measureInWindow((x, y, width, height) => {
+        const windowWidth = Dimensions.get('window').width;
+        const top = y + height + spacing.xs;
+        const right = Math.max(spacing.sm, windowWidth - (x + width));
+
+        setMenuPosition({ top, right });
+        setIsMenuVisible(true);
+      });
+    } else {
+      setMenuPosition(null);
+      setIsMenuVisible(true);
+    }
+  };
+
+  const completedItemsCount = items.filter((i) => i.isChecked).length;
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredItems = normalizedQuery
+    ? items.filter((item) => item.name.toLowerCase().includes(normalizedQuery))
+    : items;
+  const displayedUncheckedItems = filteredItems.filter((i) => !i.isChecked);
+  const displayedCheckedItems = filteredItems.filter((i) => i.isChecked);
+  const fallbackMenuTop = insets.top + spacing.xl;
+  const menuPositionStyle = {
+    top: menuPosition ? Math.max(fallbackMenuTop, menuPosition.top) : fallbackMenuTop,
+    right: menuPosition ? Math.max(spacing.sm, menuPosition.right) : spacing.lg,
+  };
 
   if (!list) {
     return (
@@ -103,15 +227,24 @@ export const ListDetailScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.listName}>{list.name}</Text>
-        <Pressable onPress={() => {}}>
-          <Text style={styles.menuButton}>⋯</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable onPress={() => setIsEditing((prev) => !prev)} style={styles.editButton}>
+            <Text style={[styles.editButtonText, isEditing && styles.editButtonTextActive]}>
+              {isEditing ? 'Done' : 'Edit'}
+            </Text>
+          </Pressable>
+          <View ref={menuTriggerRef} collapsable={false}>
+            <Pressable onPress={handleMenuOpen} style={styles.menuTrigger}>
+              <Text style={styles.menuButton}>⋯</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
 
       {/* Stats Bar */}
       <View style={styles.statsBar}>
         <Text style={styles.statsText}>
-          {checkedItems.length} / {items.length} completed
+          {completedItemsCount} / {items.length} completed
         </Text>
         {items.length > 0 && (
           <View style={styles.progressBar}>
@@ -119,7 +252,7 @@ export const ListDetailScreen = () => {
               style={[
                 styles.progressFill,
                 {
-                  width: `${(checkedItems.length / items.length) * 100}%`,
+                  width: `${(completedItemsCount / items.length) * 100}%`,
                 },
               ]}
             />
@@ -129,6 +262,21 @@ export const ListDetailScreen = () => {
 
       {/* Add Item Input */}
       <View style={styles.addItemContainer}>
+        {isSearching && (
+          <View style={styles.searchContainer}>
+            <Input
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Search items..."
+              autoFocus
+              returnKeyType="search"
+              style={styles.searchInput}
+            />
+            <Pressable onPress={handleCancelSearch} style={styles.cancelSearchButton}>
+              <Text style={styles.cancelSearchText}>Cancel</Text>
+            </Pressable>
+          </View>
+        )}
         <Input
           value={newItemName}
           onChangeText={(text) => {
@@ -144,7 +292,7 @@ export const ListDetailScreen = () => {
         />
 
         {/* Suggestions */}
-        {showSuggestions && suggestions.length > 0 && (
+        {showSuggestions && !isSearching && suggestions.length > 0 && (
           <View style={styles.suggestionsContainer}>
             <ScrollView
               horizontal
@@ -173,15 +321,21 @@ export const ListDetailScreen = () => {
             <Text style={styles.emptyText}>No items yet</Text>
             <Text style={styles.emptySubtext}>Add your first item above</Text>
           </View>
+        ) : filteredItems.length === 0 ? (
+          <View style={styles.noResults}>
+            <Text style={styles.noResultsTitle}>No matching items</Text>
+            <Text style={styles.noResultsSubtitle}>Try a different search term</Text>
+          </View>
         ) : (
           <FlashList
-            data={[...uncheckedItems, ...checkedItems]}
+            data={[...displayedUncheckedItems, ...displayedCheckedItems]}
             renderItem={({ item, index }) => (
               <ItemRow
                 item={item}
                 index={index}
                 onToggle={() => handleToggleItem(item)}
                 onDelete={() => handleDeleteItem(item)}
+                isEditing={isEditing}
               />
             )}
             estimatedItemSize={80}
@@ -190,6 +344,33 @@ export const ListDetailScreen = () => {
         )}
       </View>
       </View>
+
+      <Modal
+        transparent
+        animationType="fade"
+        visible={isMenuVisible}
+        onRequestClose={closeMenu}
+      >
+        <TouchableWithoutFeedback onPress={closeMenu}>
+          <View style={styles.menuOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.menuContainer, menuPositionStyle]}>
+                <Pressable style={styles.menuItem} onPress={handleShareList}>
+                  <Text style={styles.menuItemText}>Share</Text>
+                </Pressable>
+                <View style={styles.menuDivider} />
+                <Pressable style={styles.menuItem} onPress={handleSearchPress}>
+                  <Text style={styles.menuItemText}>Search</Text>
+                </Pressable>
+                <View style={styles.menuDivider} />
+                <Pressable style={styles.menuItem} onPress={handleDeleteListPress}>
+                  <Text style={[styles.menuItemText, styles.menuItemDanger]}>Delete</Text>
+                </Pressable>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -199,7 +380,8 @@ const ItemRow: React.FC<{
   index: number;
   onToggle: () => void;
   onDelete: () => void;
-}> = ({ item, index, onToggle, onDelete }) => {
+  isEditing: boolean;
+}> = ({ item, index, onToggle, onDelete, isEditing }) => {
   return (
     <Animated.View
       entering={FadeInUp.delay(index * 30)}
@@ -220,8 +402,15 @@ const ItemRow: React.FC<{
           {item.quantity} {item.unit}
         </Text>
       </View>
-      <Pressable onPress={onDelete} style={styles.deleteButton}>
-        <Text style={styles.deleteIcon}>🗑️</Text>
+      <Pressable
+        onPress={onDelete}
+        disabled={!isEditing}
+        style={[
+          styles.deleteButton,
+          !isEditing && styles.deleteButtonHidden,
+        ]}
+      >
+        <View style={styles.minusIcon} />
       </Pressable>
     </Animated.View>
   );
@@ -245,10 +434,31 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.borderLight,
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   listName: {
     fontSize: typography.h3,
     fontWeight: typography.weightBold,
     color: colors.text,
+  },
+  editButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    marginRight: spacing.sm,
+  },
+  editButtonText: {
+    fontSize: typography.bodySmall,
+    color: colors.primary,
+    fontWeight: typography.weightSemibold,
+  },
+  editButtonTextActive: {
+    color: colors.primaryDark,
+  },
+  menuTrigger: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   menuButton: {
     fontSize: 28,
@@ -281,6 +491,22 @@ const styles = StyleSheet.create({
   addItemInput: {
     marginBottom: 0,
   },
+  searchContainer: {
+    marginBottom: spacing.md,
+  },
+  searchInput: {
+    marginBottom: 0,
+  },
+  cancelSearchButton: {
+    alignSelf: 'flex-end',
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs / 2,
+  },
+  cancelSearchText: {
+    fontSize: typography.caption,
+    color: colors.textSecondary,
+  },
   suggestionsContainer: {
     marginTop: spacing.sm,
   },
@@ -310,6 +536,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: spacing.xxl * 2,
+  },
+  noResults: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xxl,
+  },
+  noResultsTitle: {
+    fontSize: typography.body,
+    fontWeight: typography.weightSemibold,
+    color: colors.text,
+    marginBottom: spacing.xs,
+  },
+  noResultsSubtitle: {
+    fontSize: typography.bodySmall,
+    color: colors.textSecondary,
   },
   emptyEmoji: {
     fontSize: 80,
@@ -353,9 +596,55 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   deleteButton: {
-    padding: spacing.sm,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.error,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: spacing.md,
   },
-  deleteIcon: {
-    fontSize: 20,
+  deleteButtonHidden: {
+    opacity: 0,
+  },
+  minusIcon: {
+    width: 12,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.surface,
+  },
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: colors.overlay,
+    position: 'relative',
+  },
+  menuContainer: {
+    position: 'absolute',
+    width: 200,
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    paddingVertical: spacing.xs,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 6,
+  },
+  menuItem: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  menuItemText: {
+    fontSize: typography.body,
+    color: colors.text,
+  },
+  menuItemDanger: {
+    color: colors.error,
+    fontWeight: typography.weightSemibold,
+  },
+  menuDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.borderLight,
+    marginHorizontal: spacing.xs,
   },
 });
