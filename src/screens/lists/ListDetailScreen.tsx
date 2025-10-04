@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInUp, Layout } from 'react-native-reanimated';
@@ -14,6 +14,7 @@ import { Input, Checkbox } from '../../components/core';
 import { database, List, ListItem } from '../../database';
 import { colors, typography, spacing } from '../../theme';
 import { Q } from '@nozbe/watermelondb';
+import { useSuggestionsStore } from '../../stores';
 
 export const ListDetailScreen = () => {
   const route = useRoute();
@@ -23,6 +24,10 @@ export const ListDetailScreen = () => {
   const [list, setList] = useState<List | null>(null);
   const [items, setItems] = useState<ListItem[]>([]);
   const [newItemName, setNewItemName] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const { getSuggestions, addRecentItem } = useSuggestionsStore();
+  const suggestions = getSuggestions(newItemName, 8);
 
   useEffect(() => {
     loadListAndItems();
@@ -38,14 +43,15 @@ export const ListDetailScreen = () => {
     setItems(listItems);
   };
 
-  const handleAddItem = async () => {
-    if (!newItemName.trim() || !list) return;
+  const handleAddItem = async (itemName?: string) => {
+    const nameToAdd = itemName || newItemName.trim();
+    if (!nameToAdd || !list) return;
 
     await database.write(async () => {
       const itemsCollection = database.get<ListItem>('list_items');
       await itemsCollection.create((item) => {
         item.listId = list.id;
-        item.name = newItemName.trim();
+        item.name = nameToAdd;
         item.quantity = 1;
         item.unit = 'unit';
         item.category = 'other';
@@ -54,8 +60,16 @@ export const ListDetailScreen = () => {
       });
     });
 
+    // Track this item in recent items
+    addRecentItem(nameToAdd);
+
     setNewItemName('');
+    setShowSuggestions(false);
     loadListAndItems();
+  };
+
+  const handleSuggestionPress = (suggestion: string) => {
+    handleAddItem(suggestion);
   };
 
   const handleToggleItem = async (item: ListItem) => {
@@ -117,12 +131,38 @@ export const ListDetailScreen = () => {
       <View style={styles.addItemContainer}>
         <Input
           value={newItemName}
-          onChangeText={setNewItemName}
+          onChangeText={(text) => {
+            setNewItemName(text);
+            setShowSuggestions(text.length > 0 || text === '');
+          }}
           placeholder="Add item..."
-          onSubmitEditing={handleAddItem}
+          onSubmitEditing={() => handleAddItem()}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           returnKeyType="done"
           style={styles.addItemInput}
         />
+
+        {/* Suggestions */}
+        {showSuggestions && suggestions.length > 0 && (
+          <View style={styles.suggestionsContainer}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.suggestionsScroll}
+            >
+              {suggestions.map((suggestion, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.suggestionChip}
+                  onPress={() => handleSuggestionPress(suggestion)}
+                >
+                  <Text style={styles.suggestionText}>{suggestion}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </View>
 
       {/* Items List */}
@@ -240,6 +280,27 @@ const styles = StyleSheet.create({
   },
   addItemInput: {
     marginBottom: 0,
+  },
+  suggestionsContainer: {
+    marginTop: spacing.sm,
+  },
+  suggestionsScroll: {
+    paddingVertical: spacing.xs,
+    gap: spacing.sm,
+  },
+  suggestionChip: {
+    backgroundColor: colors.primary + '15',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: 16,
+    marginRight: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.primary + '30',
+  },
+  suggestionText: {
+    fontSize: typography.bodySmall,
+    color: colors.primary,
+    fontWeight: typography.weightMedium,
   },
   itemsContainer: {
     flex: 1,
