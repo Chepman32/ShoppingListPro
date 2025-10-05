@@ -17,6 +17,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { useSettingsStore, Language } from '../../stores/settingsStore';
 import { Card } from '../../components/core';
 import { colors, typography, spacing } from '../../theme';
@@ -45,6 +46,7 @@ const languages: { code: Language; name: string; nativeName: string }[] = [
 ];
 
 export const SettingsScreen = () => {
+  const navigation = useNavigation();
   const { t, i18n } = useTranslation();
   const { theme: currentTheme, themeMode } = useTheme();
   const {
@@ -160,6 +162,16 @@ export const SettingsScreen = () => {
             {t('settings.data.title')}
           </Text>
           <Card>
+            <TouchableOpacity
+              style={styles.setting}
+              onPress={() => navigation.navigate('CloudSync' as never)}
+            >
+              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
+                Cloud Sync
+              </Text>
+              <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
+            </TouchableOpacity>
+            <View style={[styles.divider, { backgroundColor: currentTheme.borderLight }]} />
             <TouchableOpacity
               style={styles.setting}
               onPress={() => {

@@ -18,6 +18,7 @@ import { TemplateDetailScreen } from '../screens/templates/TemplateDetailScreen'
 import { CreateTemplateScreen } from '../screens/templates/CreateTemplateScreen';
 import { MoreScreen } from '../screens/more/MoreScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
+import { CloudSyncScreen } from '../screens/settings/CloudSyncScreen';
 import { FavoritesScreen } from '../screens/more/FavoritesScreen';
 import { StatsScreen } from '../screens/more/StatsScreen';
 import { AboutScreen } from '../screens/more/AboutScreen';
@@ -156,6 +157,11 @@ const MoreStack = () => {
         name="Settings"
         component={SettingsScreen}
         options={{ title: 'Settings' }}
+      />
+      <Stack.Screen
+        name="CloudSync"
+        component={CloudSyncScreen}
+        options={{ title: 'Cloud Sync' }}
       />
       <Stack.Screen
         name="Favorites"
