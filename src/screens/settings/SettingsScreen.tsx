@@ -164,16 +164,6 @@ export const SettingsScreen = () => {
           <Card>
             <TouchableOpacity
               style={styles.setting}
-              onPress={() => navigation.navigate('CloudSync' as never)}
-            >
-              <Text style={[styles.settingLabel, { color: currentTheme.textSecondary }]}>
-                Cloud Sync
-              </Text>
-              <Text style={[styles.chevron, { color: currentTheme.textTertiary }]}>›</Text>
-            </TouchableOpacity>
-            <View style={[styles.divider, { backgroundColor: currentTheme.borderLight }]} />
-            <TouchableOpacity
-              style={styles.setting}
               onPress={() => {
                 // TODO: Implement export stats functionality
                 alert('Export Stats feature coming soon!');

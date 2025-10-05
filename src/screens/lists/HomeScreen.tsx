@@ -68,6 +68,11 @@ export const HomeScreen = () => {
           onPress={() => navigation.navigate('MealPlannerFromHome' as never)}
         />
         <QuickActionCard
+          title="Cloud Sync"
+          emoji="☁️"
+          onPress={() => navigation.navigate('CloudSync' as never)}
+        />
+        <QuickActionCard
           title="Pantry"
           emoji="🏪"
           onPress={() => navigation.navigate('Pantry' as never)}

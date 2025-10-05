@@ -88,6 +88,11 @@ const ListsStack = () => {
         component={MealPlannerScreen}
         options={{ title: 'Meal Planner' }}
       />
+      <Stack.Screen
+        name="CloudSync"
+        component={CloudSyncScreen}
+        options={{ title: 'Cloud Sync' }}
+      />
     </Stack.Navigator>
   );
 };
