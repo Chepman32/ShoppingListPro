@@ -328,7 +328,7 @@ export const CloudSyncScreen = () => {
                   value={autoSyncEnabled}
                   onValueChange={toggleAutoSync}
                   trackColor={{ false: theme.borderLight, true: theme.primary }}
-                  thumbColor={autoSyncEnabled ? theme.primary : theme.border}
+                  thumbColor={theme.surface}
                 />
               </View>
               {syncStatus.isSyncing && (

@@ -68,7 +68,7 @@ export const ListDetailScreen = () => {
 
   const { getSuggestions, addRecentItem } = useSuggestionsStore();
   const deleteList = useListsStore((state) => state.deleteList);
-  const suggestions = getSuggestions(newItemName, 8);
+  const suggestions = getSuggestions(newItemName, 20);
   const insets = useSafeAreaInsets();
   const menuTriggerRef = useRef<RNView | null>(null);
   const { t } = useTranslation();
@@ -389,19 +389,22 @@ export const ListDetailScreen = () => {
 
         {/* Suggestions */}
         {showSuggestions && !isSearching && suggestions.length > 0 && (
-          <View style={styles.suggestionsContainer}>
-            <View style={styles.suggestionsList}>
-              {suggestions.map((suggestion, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.suggestionChip}
-                  onPress={() => handleSuggestionPress(suggestion)}
-                >
-                  <Text style={styles.suggestionText}>{suggestion}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+          <ScrollView
+            style={styles.suggestionsContainer}
+            contentContainerStyle={styles.suggestionsContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {suggestions.map((suggestion, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.suggestionRow}
+                onPress={() => handleSuggestionPress(suggestion)}
+              >
+                <Text style={styles.suggestionText}>{suggestion}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         )}
       </View>
 
@@ -630,28 +633,25 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   suggestionsContainer: {
+    maxHeight: 200,
     marginTop: spacing.sm,
-  },
-  suggestionsList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingVertical: spacing.xs,
-    marginHorizontal: -spacing.xs,
-  },
-  suggestionChip: {
-    backgroundColor: colors.primary + '15',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: 16,
-    marginHorizontal: spacing.xs,
-    marginBottom: spacing.xs,
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.primary + '30',
+    borderColor: colors.borderLight,
+  },
+  suggestionsContent: {
+    paddingVertical: spacing.xs,
+  },
+  suggestionRow: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.borderLight,
   },
   suggestionText: {
-    fontSize: typography.bodySmall,
-    color: colors.primary,
-    fontWeight: typography.weightMedium,
+    fontSize: typography.body,
+    color: colors.text,
   },
   itemsContainer: {
     flex: 1,

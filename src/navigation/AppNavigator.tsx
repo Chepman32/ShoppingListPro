@@ -12,7 +12,6 @@ import { HomeScreen } from '../screens/lists/HomeScreen';
 import { ListDetailScreen } from '../screens/lists/ListDetailScreen';
 import { CreateListScreen } from '../screens/lists/CreateListScreen';
 import { ShoppingModeScreen } from '../screens/shopping/ShoppingModeScreen';
-import { PantryScreen } from '../screens/pantry/PantryScreen';
 import { TemplatesScreen } from '../screens/templates/TemplatesScreen';
 import { TemplateDetailScreen } from '../screens/templates/TemplateDetailScreen';
 import { CreateTemplateScreen } from '../screens/templates/CreateTemplateScreen';
@@ -24,8 +23,6 @@ import { StatsScreen } from '../screens/more/StatsScreen';
 import { AboutScreen } from '../screens/more/AboutScreen';
 import { RecentsScreen } from '../screens/more/RecentsScreen';
 import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
-import { AddMealScreen } from '../screens/mealPlan/AddMealScreen';
-import { GenerateShoppingListScreen } from '../screens/mealPlan/GenerateShoppingListScreen';
 import { ProductScreen } from '../screens/products/ProductScreen';
 import { useTheme } from '../ThemeContext';
 
@@ -122,34 +119,6 @@ const TemplatesStack = () => {
   );
 };
 
-const MealPlanStack = () => {
-  return (
-    <Stack.Navigator screenOptions={baseStackScreenOptions}>
-      <Stack.Screen
-        name="MealPlannerHome"
-        component={MealPlannerScreen}
-        options={{ headerShown: false, title: 'Meal Planner' }}
-      />
-      <Stack.Screen
-        name="AddMeal"
-        component={AddMealScreen}
-        options={{
-          presentation: 'modal',
-          title: 'Add Meal',
-        }}
-      />
-      <Stack.Screen
-        name="GenerateShoppingList"
-        component={GenerateShoppingListScreen}
-        options={{
-          presentation: 'modal',
-          title: 'Generate List',
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
 const MoreStack = () => {
   return (
     <Stack.Navigator screenOptions={baseStackScreenOptions}>
@@ -210,25 +179,17 @@ export const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Pantry"
-        component={PantryScreen}
-        options={{
-          tabBarIcon: createEmojiIcon('🏪'),
-        }}
-      />
-      <Tab.Screen
-        name="MealPlan"
-        component={MealPlanStack}
-        options={{
-          tabBarIcon: createEmojiIcon('📅'),
-          tabBarLabel: 'Meal Plan',
-        }}
-      />
-      <Tab.Screen
         name="Templates"
         component={TemplatesStack}
         options={{
           tabBarIcon: createEmojiIcon('📋'),
+        }}
+      />
+      <Tab.Screen
+        name="Premium"
+        component={MoreStack}
+        options={{
+          tabBarIcon: createEmojiIcon('👑'),
         }}
       />
       <Tab.Screen
