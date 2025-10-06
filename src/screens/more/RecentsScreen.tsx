@@ -18,6 +18,7 @@ import { colors, spacing, typography, borderRadius } from '../../theme';
 import { useTheme } from '../../ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useRecentsStore } from '../../stores/recentsStore';
+import { formatDate, formatDateShort } from '../../utils';
 import type {
   RecentListEntry,
   RecentTemplateEntry,
@@ -288,10 +289,10 @@ export const RecentsScreen = () => {
                         </View>
                         <View style={styles.recentContent}>
                           <Text style={[styles.recentTitle, { color: theme.text }]}>
-                            {recent.mealName || `${recent.mealType} - ${recent.date}`}
+                            {recent.mealName || recent.mealType}
                           </Text>
                           <Text style={[styles.recentSubtitle, { color: theme.textSecondary }]}>
-                            {formatAccessedDate(recent.accessedAt)}
+                            {formatDateShort(new Date(recent.date))} • {formatAccessedDate(recent.accessedAt)}
                           </Text>
                         </View>
                         <Text style={[styles.chevron, { color: theme.textTertiary }]}>›</Text>

@@ -13,6 +13,7 @@ import Animated, {
   Layout,
 } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { Button, Card } from '../../components/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useListsStore } from '../../stores';
@@ -21,6 +22,7 @@ import { useTheme } from '../../ThemeContext';
 import { List } from '../../database';
 
 export const HomeScreen = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const { lists, fetchLists, deleteList, archiveList } = useListsStore();
   const { theme } = useTheme();
@@ -44,7 +46,7 @@ export const HomeScreen = () => {
       <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>ListFlow</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('home.title')}</Text>
         <Pressable onPress={() => navigation.navigate('Recents' as never)}>
           <Text style={styles.recentsIcon}>🕒</Text>
         </Pressable>
@@ -58,28 +60,28 @@ export const HomeScreen = () => {
         contentContainerStyle={styles.quickActionsContent}
       >
         <QuickActionCard
-          title="Recents"
+          title={t('home.quickActions.recents')}
           emoji="🕒"
           onPress={() => navigation.navigate('Recents' as never)}
         />
         <QuickActionCard
-          title="Meal Plan"
+          title={t('home.quickActions.mealPlan')}
           emoji="📅"
           onPress={() => navigation.navigate('MealPlannerFromHome' as never)}
         />
         <QuickActionCard
-          title="Cloud Sync"
+          title={t('home.quickActions.cloudSync')}
           emoji="☁️"
           onPress={() => navigation.navigate('CloudSync' as never)}
         />
         <QuickActionCard
-          title="Pantry"
+          title={t('home.quickActions.pantry')}
           emoji="🏪"
           onPress={() => navigation.navigate('Pantry' as never)}
           premium
         />
         <QuickActionCard
-          title="Templates"
+          title={t('home.quickActions.templates')}
           emoji="📋"
           onPress={() => navigation.navigate('Templates' as never)}
         />
@@ -88,14 +90,14 @@ export const HomeScreen = () => {
       {/* Lists Section */}
       <View style={styles.listsSection}>
         <Text style={[styles.sectionTitle, { color: theme.text }]}>
-          Your Lists ({activeLists.length})
+          {t('home.yourLists')} ({activeLists.length})
         </Text>
 
         {activeLists.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🛒</Text>
-            <Text style={[styles.emptyText, { color: theme.text }]}>No lists yet</Text>
-            <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>Tap + to create your first list</Text>
+            <Text style={[styles.emptyText, { color: theme.text }]}>{t('home.noLists')}</Text>
+            <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>{t('home.createFirst')}</Text>
           </View>
         ) : (
           <FlashList
@@ -151,6 +153,7 @@ const ListCard: React.FC<{
   onDelete: () => void;
   onArchive: () => void;
 }> = ({ list, index, onPress, onDelete, onArchive }) => {
+  const { t } = useTranslation();
   const [showActions, setShowActions] = useState(false);
   const { theme } = useTheme();
 
@@ -173,7 +176,7 @@ const ListCard: React.FC<{
               <Text style={[styles.listName, { color: theme.textSecondary }]}>{list.name}</Text>
               <Text style={[styles.listMeta, { color: theme.textTertiary }]}>
                 {/* TODO: Show item count */}
-                0 items
+                0 {t('home.items')}
               </Text>
             </View>
             <Text style={[styles.chevron, { color: theme.textTertiary }]}>›</Text>
@@ -182,13 +185,13 @@ const ListCard: React.FC<{
           {showActions && (
             <View style={styles.actions}>
               <Button variant="outline" size="small" onPress={onArchive}>
-                Archive
+                {t('home.actions.archive')}
               </Button>
               <Button variant="outline" size="small" onPress={onDelete}>
-                Delete
+                {t('home.actions.delete')}
               </Button>
               <Button variant="ghost" size="small" onPress={() => setShowActions(false)}>
-                Cancel
+                {t('home.actions.cancel')}
               </Button>
             </View>
           )}

@@ -5,22 +5,25 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar, Pressable, Modal, ScrollView, Alert, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Pressable, Modal, ScrollView, Alert, FlatList, TextInput, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInDown, FadeOutLeft, Layout } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { usePantryStore, useSuggestionsStore } from '../../stores';
 import { Card, Button } from '../../components/core';
 import { typography, spacing, borderRadius } from '../../theme';
 import { useTheme } from '../../ThemeContext';
 import { PantryItem } from '../../database';
 import { CreatePantryItemData } from '../../types/database';
+import { formatDate, formatDateShort, getRelativeTime } from '../../utils';
 
 const LOCATIONS = ['fridge', 'pantry', 'freezer'] as const;
 const CATEGORIES = ['produce', 'dairy', 'meat', 'bakery', 'frozen', 'pantry', 'beverages', 'snacks', 'other'] as const;
 const UNITS = ['pcs', 'kg', 'g', 'l', 'ml', 'lb', 'oz', 'cup', 'tbsp', 'tsp'] as const;
 
 export const PantryScreen = () => {
+  const { t } = useTranslation();
   const { items, expiringItems, lowStockItems, fetchItems, deleteItem, consumeItem } = usePantryStore();
   const { theme } = useTheme();
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -49,12 +52,12 @@ export const PantryScreen = () => {
 
   const handleDeleteItem = (item: PantryItem) => {
     Alert.alert(
-      'Delete Item',
-      `Are you sure you want to delete ${item.name}?`,
+      t('pantry.alerts.deleteTitle'),
+      t('pantry.alerts.deleteMessage', { name: item.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => deleteItem(item.id)
         }
@@ -64,10 +67,10 @@ export const PantryScreen = () => {
 
   const handleConsumeItem = (item: PantryItem) => {
     Alert.alert(
-      'Consume Item',
-      `How much ${item.unit} would you like to consume?`,
+      t('pantry.alerts.consumeTitle'),
+      t('pantry.alerts.consumeMessage', { unit: item.unit }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { text: '1', onPress: () => consumeItem(item.id, 1) },
         { text: '5', onPress: () => consumeItem(item.id, 5) },
         { text: 'All', onPress: () => consumeItem(item.id, item.quantity) }
@@ -92,7 +95,7 @@ export const PantryScreen = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Pantry</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('pantry.title')}</Text>
         <Pressable onPress={handleAddItem} style={[styles.addButton, { backgroundColor: theme.primary }]}>
           <Text style={styles.addButtonText}>+</Text>
         </Pressable>
@@ -103,7 +106,7 @@ export const PantryScreen = () => {
         <Pressable onPress={() => setFilter('expiring')}>
           <Card style={[styles.alertCard, { backgroundColor: theme.warning + '20' }]}>
             <Text style={[styles.alertText, { color: theme.text }]}>
-              ⚠️ {expiringItems.length} items expiring soon
+              ⚠️ {expiringItems.length} {t('pantry.itemsExpiringSoon')}
             </Text>
           </Card>
         </Pressable>
@@ -113,7 +116,7 @@ export const PantryScreen = () => {
         <Pressable onPress={() => setFilter('low')}>
           <Card style={[styles.alertCard, { backgroundColor: theme.info + '20' }]}>
             <Text style={[styles.alertText, { color: theme.text }]}>
-              📦 {lowStockItems.length} items running low
+              📦 {lowStockItems.length} {t('pantry.itemsRunningLow')}
             </Text>
           </Card>
         </Pressable>
@@ -121,18 +124,18 @@ export const PantryScreen = () => {
 
       {/* Filter Pills */}
       <View style={styles.filterContainer}>
-        <FilterPill label="All" count={items.length} active={filter === 'all'} onPress={() => setFilter('all')} />
-        <FilterPill label="Expiring" count={expiringItems.length} active={filter === 'expiring'} onPress={() => setFilter('expiring')} />
-        <FilterPill label="Low Stock" count={lowStockItems.length} active={filter === 'low'} onPress={() => setFilter('low')} />
+        <FilterPill label={t('pantry.filters.all')} count={items.length} active={filter === 'all'} onPress={() => setFilter('all')} />
+        <FilterPill label={t('pantry.filters.expiring')} count={expiringItems.length} active={filter === 'expiring'} onPress={() => setFilter('expiring')} />
+        <FilterPill label={t('pantry.filters.lowStock')} count={lowStockItems.length} active={filter === 'low'} onPress={() => setFilter('low')} />
       </View>
 
       {/* Items */}
       {filteredItems.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyEmoji}>🏪</Text>
-          <Text style={[styles.emptyText, { color: theme.text }]}>No items in pantry</Text>
+          <Text style={[styles.emptyText, { color: theme.text }]}>{t('pantry.noItems')}</Text>
           <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>
-            Tap + to add your first item
+            {t('pantry.createFirst')}
           </Text>
         </View>
       ) : (
@@ -154,9 +157,9 @@ export const PantryScreen = () => {
                       </Text>
                     </View>
                     <View style={styles.itemBadges}>
-                      {item.isExpired && <Text style={styles.expiredBadge}>Expired</Text>}
-                      {item.isExpiring && !item.isExpired && <Text style={styles.expiringBadge}>Soon</Text>}
-                      {item.isLowStock && <Text style={styles.lowStockBadge}>Low</Text>}
+                      {item.isExpired && <Text style={styles.expiredBadge}>{t('pantry.badges.expired')}</Text>}
+                      {item.isExpiring && !item.isExpired && <Text style={styles.expiringBadge}>{t('pantry.badges.expiringSoon')}</Text>}
+                      {item.isLowStock && <Text style={styles.lowStockBadge}>{t('pantry.badges.lowStock')}</Text>}
                     </View>
                   </View>
 
@@ -172,21 +175,27 @@ export const PantryScreen = () => {
                   {item.expiryDate && (
                     <Text style={[styles.itemExpiry, { color: getExpiryColor(item) }]}>
                       {item.isExpired
-                        ? `⏱️ Expired ${Math.abs(getDaysUntilExpiry(item) || 0)} days ago`
-                        : `⏱️ Expires in ${getDaysUntilExpiry(item)} days`
+                        ? `⏱️ Expired ${formatDateShort(item.expiryDate)} (${Math.abs(getDaysUntilExpiry(item) || 0)}d ago)`
+                        : `⏱️ Expires ${formatDateShort(item.expiryDate)} (${getDaysUntilExpiry(item)}d)`
                       }
+                    </Text>
+                  )}
+
+                  {item.purchaseDate && (
+                    <Text style={[styles.itemPurchaseDate, { color: theme.textTertiary }]}>
+                      Added {getRelativeTime(item.purchaseDate)}
                     </Text>
                   )}
 
                   <View style={styles.itemActions}>
                     <Button variant="ghost" size="small" onPress={() => handleConsumeItem(item)}>
-                      Use
+                      {t('pantry.actions.use')}
                     </Button>
                     <Button variant="ghost" size="small" onPress={() => handleEditItem(item)}>
-                      Edit
+                      {t('pantry.actions.edit')}
                     </Button>
                     <Button variant="ghost" size="small" onPress={() => handleDeleteItem(item)}>
-                      Delete
+                      {t('pantry.actions.delete')}
                     </Button>
                   </View>
                 </Card>
@@ -248,6 +257,7 @@ const AddItemModal: React.FC<{
   visible: boolean;
   onClose: () => void;
 }> = ({ visible, onClose }) => {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const { addItem } = usePantryStore();
   const { getSuggestions, addRecentItem } = useSuggestionsStore();
@@ -277,7 +287,7 @@ const AddItemModal: React.FC<{
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
-      Alert.alert('Error', 'Please enter an item name');
+      Alert.alert(t('pantry.alerts.errorTitle'), t('pantry.alerts.errorNameRequired'));
       return;
     }
 
@@ -297,7 +307,7 @@ const AddItemModal: React.FC<{
       onClose();
     } catch (error) {
       console.error('Error adding pantry item:', error);
-      Alert.alert('Error', `Failed to add item: ${error.message || error}`);
+      Alert.alert(t('pantry.alerts.errorTitle'), `${t('pantry.alerts.errorAddItem')}: ${error.message || error}`);
     }
   };
 
@@ -308,7 +318,7 @@ const AddItemModal: React.FC<{
           <Pressable onPress={handleSubmit}>
             <Text style={[styles.headerAction, { color: theme.primary }]}>OK</Text>
           </Pressable>
-          <Text style={[styles.modalTitle, { color: theme.text }]}>Add Pantry Item</Text>
+          <Text style={[styles.modalTitle, { color: theme.text }]}>{t('pantry.addItem')}</Text>
           <Pressable onPress={onClose}>
             <Text style={[styles.closeButton, { color: theme.primary }]}>✕</Text>
           </Pressable>
@@ -316,7 +326,7 @@ const AddItemModal: React.FC<{
 
         <ScrollView style={styles.modalContent}>
           <View style={styles.inputContainer}>
-            <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Item Name</Text>
+            <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.itemName')}</Text>
             <TextInput
               style={[styles.textInput, {
                 backgroundColor: theme.backgroundSecondary,
@@ -325,7 +335,7 @@ const AddItemModal: React.FC<{
               }]}
               value={formData.name}
               onChangeText={handleNameChange}
-              placeholder="e.g., Milk, Eggs, Bread"
+              placeholder={t('pantry.fields.itemNamePlaceholder')}
               placeholderTextColor={theme.textTertiary}
               onFocus={() => {
                 const filtered = getSuggestions(formData.name, 8);
@@ -355,7 +365,7 @@ const AddItemModal: React.FC<{
             )}
           </View>
 
-          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Category</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>{t('pantry.fields.category')}</Text>
           <View style={styles.optionsGrid}>
             {CATEGORIES.map((cat) => (
               <Pressable
@@ -373,13 +383,13 @@ const AddItemModal: React.FC<{
                   styles.optionText,
                   { color: formData.category === cat ? '#FFFFFF' : theme.textSecondary }
                 ]}>
-                  {cat}
+                  {t(`pantry.categories.${cat}`)}
                 </Text>
               </Pressable>
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Unit</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.unit')}</Text>
           <View style={styles.unitGrid}>
             {UNITS.map((u) => (
               <Pressable
@@ -403,7 +413,7 @@ const AddItemModal: React.FC<{
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary, marginTop: spacing.md }]}>Quantity</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary, marginTop: spacing.md }]}>{t('pantry.fields.quantity')}</Text>
           <View style={[styles.quantityPickerContainer, {
             backgroundColor: theme.backgroundSecondary,
             borderColor: theme.borderLight
@@ -442,7 +452,7 @@ const AddItemModal: React.FC<{
             </ScrollView>
           </View>
 
-          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Location</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>{t('pantry.fields.location')}</Text>
           <View style={styles.optionsRow}>
             {LOCATIONS.map((loc) => (
               <Pressable
@@ -460,13 +470,13 @@ const AddItemModal: React.FC<{
                   styles.optionText,
                   { color: formData.location === loc ? '#FFFFFF' : theme.textSecondary }
                 ]}>
-                  {loc}
+                  {t(`pantry.locations.${loc}`)}
                 </Text>
               </Pressable>
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Low Stock Threshold</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.lowStockThreshold')}</Text>
           <TextInput
             style={[styles.textInput, {
               backgroundColor: theme.backgroundSecondary,
@@ -478,7 +488,30 @@ const AddItemModal: React.FC<{
             keyboardType="numeric"
           />
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Notes (optional)</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Expiry Date (Optional)</Text>
+          <TextInput
+            style={[styles.textInput, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
+            value={formData.expiryDate ? formatDate(formData.expiryDate) : ''}
+            onChangeText={(text) => {
+              // Parse date from input (YYYY-MM-DD format)
+              if (text.trim() === '') {
+                setFormData({ ...formData, expiryDate: undefined });
+              } else {
+                const date = new Date(text);
+                if (!isNaN(date.getTime())) {
+                  setFormData({ ...formData, expiryDate: date });
+                }
+              }
+            }}
+            placeholder="YYYY-MM-DD"
+            placeholderTextColor={theme.textTertiary}
+          />
+
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.notesOptional')}</Text>
           <TextInput
             style={[styles.textInput, styles.textInputMultiline, {
               backgroundColor: theme.backgroundSecondary,
@@ -503,10 +536,20 @@ const EditItemModal: React.FC<{
   item: PantryItem | null;
   onClose: () => void;
 }> = ({ visible, item, onClose }) => {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const { updateItem, replenishItem } = usePantryStore();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    category: string;
+    quantity: number;
+    unit: string;
+    location: string;
+    lowStockThreshold: number;
+    notes: string;
+    expiryDate?: Date;
+  }>({
     name: '',
     category: 'other',
     quantity: 1,
@@ -526,6 +569,7 @@ const EditItemModal: React.FC<{
         location: item.location,
         lowStockThreshold: item.lowStockThreshold,
         notes: item.notes || '',
+        expiryDate: item.expiryDate,
       });
     }
   }, [item]);
@@ -537,7 +581,7 @@ const EditItemModal: React.FC<{
       await updateItem(item.id, formData);
       onClose();
     } catch (error) {
-      Alert.alert('Error', 'Failed to update item');
+      Alert.alert(t('pantry.alerts.errorTitle'), t('pantry.alerts.errorUpdateItem'));
     }
   };
 
@@ -545,10 +589,10 @@ const EditItemModal: React.FC<{
     if (!item) return;
 
     Alert.alert(
-      'Replenish Stock',
-      'How many would you like to add?',
+      t('pantry.alerts.replenishTitle'),
+      t('pantry.alerts.replenishMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { text: '+1', onPress: () => replenishItem(item.id, 1) },
         { text: '+5', onPress: () => replenishItem(item.id, 5) },
         { text: '+10', onPress: () => replenishItem(item.id, 10) }
@@ -565,14 +609,14 @@ const EditItemModal: React.FC<{
           <Pressable onPress={handleSubmit}>
             <Text style={[styles.headerAction, { color: theme.primary }]}>OK</Text>
           </Pressable>
-          <Text style={[styles.modalTitle, { color: theme.text }]}>Edit Item</Text>
+          <Text style={[styles.modalTitle, { color: theme.text }]}>{t('pantry.editItem')}</Text>
           <Pressable onPress={onClose}>
             <Text style={[styles.closeButton, { color: theme.primary }]}>✕</Text>
           </Pressable>
         </View>
 
         <ScrollView style={styles.modalContent}>
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Item Name</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.itemName')}</Text>
           <TextInput
             style={[styles.textInput, {
               backgroundColor: theme.backgroundSecondary,
@@ -583,7 +627,7 @@ const EditItemModal: React.FC<{
             onChangeText={(name) => setFormData({ ...formData, name })}
           />
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Quantity</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.quantity')}</Text>
           <View style={[styles.quantityPickerContainer, {
             backgroundColor: theme.backgroundSecondary,
             borderColor: theme.borderLight
@@ -623,10 +667,10 @@ const EditItemModal: React.FC<{
           </View>
 
           <Button onPress={handleReplenish} style={{ marginTop: spacing.md }} fullWidth>
-            Replenish Stock
+            {t('pantry.actions.replenish')}
           </Button>
 
-          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Location</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>{t('pantry.fields.location')}</Text>
           <View style={styles.optionsRow}>
             {LOCATIONS.map((loc) => (
               <Pressable
@@ -644,13 +688,36 @@ const EditItemModal: React.FC<{
                   styles.optionText,
                   { color: formData.location === loc ? '#FFFFFF' : theme.textSecondary }
                 ]}>
-                  {loc}
+                  {t(`pantry.locations.${loc}`)}
                 </Text>
               </Pressable>
             ))}
           </View>
 
-          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Notes</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Expiry Date (Optional)</Text>
+          <TextInput
+            style={[styles.textInput, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
+            value={formData.expiryDate ? formatDate(formData.expiryDate) : ''}
+            onChangeText={(text) => {
+              // Parse date from input (YYYY-MM-DD format)
+              if (text.trim() === '') {
+                setFormData({ ...formData, expiryDate: undefined });
+              } else {
+                const date = new Date(text);
+                if (!isNaN(date.getTime())) {
+                  setFormData({ ...formData, expiryDate: date });
+                }
+              }
+            }}
+            placeholder="YYYY-MM-DD"
+            placeholderTextColor={theme.textTertiary}
+          />
+
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('pantry.fields.notes')}</Text>
           <TextInput
             style={[styles.textInput, styles.textInputMultiline, {
               backgroundColor: theme.backgroundSecondary,
@@ -662,6 +729,38 @@ const EditItemModal: React.FC<{
             multiline
             numberOfLines={3}
           />
+
+          <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Attachments</Text>
+          <View style={styles.attachmentsGrid}>
+            <Pressable
+              style={[styles.attachmentButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => Alert.alert('Add Link', 'Link attachment feature coming soon')}
+            >
+              <Text style={styles.attachmentIcon}>🔗</Text>
+              <Text style={[styles.attachmentText, { color: theme.text }]}>Link</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.attachmentButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => Alert.alert('Add Location', 'Geolocation feature coming soon')}
+            >
+              <Text style={styles.attachmentIcon}>📍</Text>
+              <Text style={[styles.attachmentText, { color: theme.text }]}>Location</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.attachmentButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => Alert.alert('Add Recipe', 'Recipe attachment feature coming soon')}
+            >
+              <Text style={styles.attachmentIcon}>📖</Text>
+              <Text style={[styles.attachmentText, { color: theme.text }]}>Recipe</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.attachmentButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => Alert.alert('Add Photo', 'Photo attachment feature coming soon')}
+            >
+              <Text style={styles.attachmentIcon}>📷</Text>
+              <Text style={[styles.attachmentText, { color: theme.text }]}>Photo</Text>
+            </Pressable>
+          </View>
         </ScrollView>
 
         {null}
@@ -803,6 +902,10 @@ const styles = StyleSheet.create({
   },
   itemExpiry: {
     fontSize: typography.bodySmall,
+    marginBottom: spacing.xs,
+  },
+  itemPurchaseDate: {
+    fontSize: typography.caption,
     marginBottom: spacing.sm,
   },
   itemActions: {
@@ -834,6 +937,14 @@ const styles = StyleSheet.create({
   headerAction: {
     fontSize: typography.h3,
     fontWeight: typography.weightSemibold,
+  },
+  headerRightActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  attachmentsHeaderButton: {
+    paddingHorizontal: spacing.xs,
   },
   modalContent: {
     flex: 1,
@@ -979,5 +1090,29 @@ const styles = StyleSheet.create({
   },
   quantityPickerText: {
     textAlign: 'center',
+  },
+  attachmentsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  attachmentButton: {
+    flex: 1,
+    flexBasis: '48%',
+    minWidth: 150,
+    paddingVertical: spacing.lg,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  attachmentIcon: {
+    fontSize: 32,
+    marginBottom: spacing.xs,
+  },
+  attachmentText: {
+    fontSize: typography.bodySmall,
+    fontWeight: typography.weightMedium,
   },
 });

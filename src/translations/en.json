@@ -43,11 +43,116 @@
     "items": "items",
     "addToList": "Add to Shopping List"
   },
+  "home": {
+    "title": "ListFlow",
+    "yourLists": "Your Lists",
+    "noLists": "No lists yet",
+    "createFirst": "Tap + to create your first list",
+    "items": "items",
+    "quickActions": {
+      "recents": "Recents",
+      "mealPlan": "Meal Plan",
+      "cloudSync": "Cloud Sync",
+      "pantry": "Pantry",
+      "templates": "Templates"
+    },
+    "actions": {
+      "archive": "Archive",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    }
+  },
   "lists": {
     "title": "Your Lists",
     "newList": "New List",
     "noLists": "No lists yet",
     "createFirst": "Tap + to create your first list"
+  },
+  "navigation": {
+    "lists": "Lists",
+    "templates": "Templates",
+    "premium": "Premium",
+    "more": "More"
+  },
+  "pantry": {
+    "title": "Pantry",
+    "addItem": "Add Pantry Item",
+    "editItem": "Edit Item",
+    "noItems": "No items in pantry",
+    "createFirst": "Tap + to add your first item",
+    "itemsExpiringSoon": "items expiring soon",
+    "itemsRunningLow": "items running low",
+    "filters": {
+      "all": "All",
+      "expiring": "Expiring",
+      "lowStock": "Low Stock"
+    },
+    "badges": {
+      "expired": "Expired",
+      "expiringSoon": "Soon",
+      "lowStock": "Low"
+    },
+    "fields": {
+      "itemName": "Item Name",
+      "itemNamePlaceholder": "e.g., Milk, Eggs, Bread",
+      "category": "Category",
+      "unit": "Unit",
+      "quantity": "Quantity",
+      "location": "Location",
+      "lowStockThreshold": "Low Stock Threshold",
+      "notes": "Notes",
+      "notesOptional": "Notes (optional)"
+    },
+    "locations": {
+      "fridge": "Fridge",
+      "pantry": "Pantry",
+      "freezer": "Freezer"
+    },
+    "categories": {
+      "produce": "Produce",
+      "dairy": "Dairy",
+      "meat": "Meat",
+      "bakery": "Bakery",
+      "frozen": "Frozen",
+      "pantry": "Pantry",
+      "beverages": "Beverages",
+      "snacks": "Snacks",
+      "other": "Other"
+    },
+    "units": {
+      "pcs": "pcs",
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "lb": "lb",
+      "oz": "oz",
+      "cup": "cup",
+      "tbsp": "tbsp",
+      "tsp": "tsp"
+    },
+    "actions": {
+      "use": "Use",
+      "edit": "Edit",
+      "delete": "Delete",
+      "replenish": "Replenish Stock"
+    },
+    "alerts": {
+      "deleteTitle": "Delete Item",
+      "deleteMessage": "Are you sure you want to delete {{name}}?",
+      "consumeTitle": "Consume Item",
+      "consumeMessage": "How much {{unit}} would you like to consume?",
+      "replenishTitle": "Replenish Stock",
+      "replenishMessage": "How many would you like to add?",
+      "errorTitle": "Error",
+      "errorAddItem": "Failed to add item",
+      "errorUpdateItem": "Failed to update item",
+      "errorNameRequired": "Please enter an item name"
+    },
+    "expiry": {
+      "expiresIn": "Expires in {{days}} days",
+      "expiredDaysAgo": "Expired {{days}} days ago"
+    }
   },
   "more": {
     "title": "More",

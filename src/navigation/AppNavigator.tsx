@@ -8,6 +8,7 @@ import { Text, StyleSheet } from 'react-native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import type { StackNavigationOptions } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useTranslation } from 'react-i18next';
 import { HomeScreen } from '../screens/lists/HomeScreen';
 import { ListDetailScreen } from '../screens/lists/ListDetailScreen';
 import { CreateListScreen } from '../screens/lists/CreateListScreen';
@@ -163,6 +164,7 @@ const MoreStack = () => {
 };
 
 export const AppNavigator = () => {
+  const { t } = useTranslation();
   const { theme } = useTheme();
 
   return (
@@ -181,6 +183,7 @@ export const AppNavigator = () => {
         name="Lists"
         component={ListsStack}
         options={{
+          tabBarLabel: t('navigation.lists'),
           tabBarIcon: createEmojiIcon('📝'),
         }}
       />
@@ -188,6 +191,7 @@ export const AppNavigator = () => {
         name="Templates"
         component={TemplatesStack}
         options={{
+          tabBarLabel: t('navigation.templates'),
           tabBarIcon: createEmojiIcon('📋'),
         }}
       />
@@ -195,6 +199,7 @@ export const AppNavigator = () => {
         name="Premium"
         component={MoreStack}
         options={{
+          tabBarLabel: t('navigation.premium'),
           tabBarIcon: createEmojiIcon('👑'),
         }}
       />
@@ -202,6 +207,7 @@ export const AppNavigator = () => {
         name="More"
         component={MoreStack}
         options={{
+          tabBarLabel: t('navigation.more'),
           tabBarIcon: createEmojiIcon('⋯'),
         }}
       />
