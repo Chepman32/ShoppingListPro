@@ -24,6 +24,7 @@ import { AboutScreen } from '../screens/more/AboutScreen';
 import { RecentsScreen } from '../screens/more/RecentsScreen';
 import { MealPlannerScreen } from '../screens/mealPlan/MealPlannerScreen';
 import { ProductScreen } from '../screens/products/ProductScreen';
+import { PantryScreen } from '../screens/pantry/PantryScreen';
 import { useTheme } from '../ThemeContext';
 
 const Stack = createStackNavigator();
@@ -89,6 +90,11 @@ const ListsStack = () => {
         name="CloudSync"
         component={CloudSyncScreen}
         options={{ title: 'Cloud Sync' }}
+      />
+      <Stack.Screen
+        name="Pantry"
+        component={PantryScreen}
+        options={{ title: 'Pantry' }}
       />
     </Stack.Navigator>
   );
