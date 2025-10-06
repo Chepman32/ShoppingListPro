@@ -282,6 +282,7 @@ const AddItemModal: React.FC<{
     }
 
     try {
+      console.log('Adding pantry item with data:', JSON.stringify(formData, null, 2));
       await addItem(formData);
       addRecentItem(formData.name);
       setFormData({
@@ -295,7 +296,8 @@ const AddItemModal: React.FC<{
       setShowSuggestions(false);
       onClose();
     } catch (error) {
-      Alert.alert('Error', 'Failed to add item');
+      console.error('Error adding pantry item:', error);
+      Alert.alert('Error', `Failed to add item: ${error.message || error}`);
     }
   };
 

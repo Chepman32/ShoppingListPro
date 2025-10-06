@@ -49,24 +49,37 @@ export const usePantryStore = create<PantryState>((set, get) => ({
   },
 
   addItem: async (data) => {
-    const item = await database.write(async () => {
-      const pantryCollection = database.get<PantryItem>('pantry_items');
-      return await pantryCollection.create((newItem) => {
-        newItem.name = data.name;
-        newItem.category = data.category;
-        newItem.quantity = data.quantity;
-        newItem.unit = data.unit;
-        newItem.location = data.location;
-        newItem.expiryDate = data.expiryDate;
-        newItem.purchaseDate = new Date();
-        newItem.lowStockThreshold = data.lowStockThreshold || 1;
-        newItem.notes = data.notes;
-        newItem.barcode = data.barcode;
+    try {
+      console.log('PantryStore addItem called with:', data);
+      const item = await database.write(async () => {
+        const pantryCollection = database.get<PantryItem>('pantry_items');
+        console.log('Creating pantry item...');
+        return await pantryCollection.create((newItem) => {
+          newItem.name = data.name;
+          newItem.category = data.category;
+          newItem.quantity = data.quantity;
+          newItem.unit = data.unit;
+          newItem.location = data.location;
+          if (data.expiryDate) {
+            newItem.expiryDate = data.expiryDate;
+          }
+          newItem.lowStockThreshold = data.lowStockThreshold || 1;
+          if (data.notes) {
+            newItem.notes = data.notes;
+          }
+          if (data.barcode) {
+            newItem.barcode = data.barcode;
+          }
+        });
       });
-    });
 
-    await get().fetchItems();
-    return item;
+      console.log('Pantry item created successfully:', item.id);
+      await get().fetchItems();
+      return item;
+    } catch (error) {
+      console.error('Error in pantryStore addItem:', error);
+      throw error;
+    }
   },
 
   updateItem: async (id, updates) => {
