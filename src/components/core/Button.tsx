@@ -10,7 +10,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
+import { typography, spacing, borderRadius, shadows } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 
 interface ButtonProps {
   onPress: () => void;
@@ -31,6 +32,7 @@ export const Button = memo<ButtonProps>(({
   fullWidth = false,
   style,
 }) => {
+  const { theme } = useTheme();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -45,10 +47,41 @@ export const Button = memo<ButtonProps>(({
     transform: [{ scale: scale.value }],
   }));
 
+  const getContainerStyle = () => {
+    const baseStyle: any = {
+      ...styles.base,
+      ...styles[`${size}Container`],
+    };
+
+    if (variant === 'primary') {
+      baseStyle.backgroundColor = theme.primary;
+    } else if (variant === 'secondary') {
+      baseStyle.backgroundColor = theme.secondary;
+    } else if (variant === 'outline') {
+      baseStyle.backgroundColor = 'transparent';
+      baseStyle.borderWidth = 2;
+      baseStyle.borderColor = theme.primary;
+    } else if (variant === 'ghost') {
+      baseStyle.backgroundColor = 'transparent';
+    }
+
+    return baseStyle;
+  };
+
+  const getTextColor = () => {
+    if (disabled) {
+      return theme.textDisabled;
+    }
+
+    if (variant === 'primary' || variant === 'secondary') {
+      return '#FFFFFF';
+    }
+
+    return theme.primary;
+  };
+
   const containerStyle = [
-    styles.base,
-    styles[`${variant}Container`],
-    styles[`${size}Container`],
+    getContainerStyle(),
     fullWidth && styles.fullWidth,
     disabled && styles.disabled,
     style,
@@ -56,9 +89,8 @@ export const Button = memo<ButtonProps>(({
 
   const textStyle = [
     styles.text,
-    styles[`${variant}Text`],
     styles[`${size}Text`],
-    disabled && styles.disabledText,
+    { color: getTextColor() },
   ];
 
   return (
@@ -87,22 +119,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
-  // Variants
-  primaryContainer: {
-    backgroundColor: colors.primary,
-  },
-  secondaryContainer: {
-    backgroundColor: colors.secondary,
-  },
-  outlineContainer: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  ghostContainer: {
-    backgroundColor: 'transparent',
-  },
-
   // Sizes
   smallContainer: {
     paddingHorizontal: spacing.md,
@@ -121,18 +137,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: typography.weightSemibold,
   },
-  primaryText: {
-    color: '#FFFFFF',
-  },
-  secondaryText: {
-    color: '#FFFFFF',
-  },
-  outlineText: {
-    color: colors.primary,
-  },
-  ghostText: {
-    color: colors.primary,
-  },
 
   // Text sizes
   smallText: {
@@ -148,9 +152,6 @@ const styles = StyleSheet.create({
   // Disabled
   disabled: {
     opacity: 0.5,
-  },
-  disabledText: {
-    color: colors.textDisabled,
   },
 });
 

@@ -5,12 +5,12 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar, Pressable, Modal, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Pressable, Modal, ScrollView, Alert, FlatList, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInDown, FadeOutLeft, Layout } from 'react-native-reanimated';
-import { usePantryStore } from '../../stores';
-import { Card, Button, Input } from '../../components/core';
+import { usePantryStore, useSuggestionsStore } from '../../stores';
+import { Card, Button } from '../../components/core';
 import { typography, spacing, borderRadius } from '../../theme';
 import { useTheme } from '../../ThemeContext';
 import { PantryItem } from '../../database';
@@ -250,6 +250,7 @@ const AddItemModal: React.FC<{
 }> = ({ visible, onClose }) => {
   const { theme } = useTheme();
   const { addItem } = usePantryStore();
+  const { getSuggestions, addRecentItem } = useSuggestionsStore();
 
   const [formData, setFormData] = useState<CreatePantryItemData>({
     name: '',
@@ -259,6 +260,20 @@ const AddItemModal: React.FC<{
     location: 'pantry',
     lowStockThreshold: 1,
   });
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const handleNameChange = (text: string) => {
+    setFormData({ ...formData, name: text });
+    const filtered = getSuggestions(text, 8);
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0 && text.length > 0);
+  };
+
+  const handleSuggestionSelect = (suggestion: string) => {
+    setFormData({ ...formData, name: suggestion });
+    setShowSuggestions(false);
+  };
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) {
@@ -268,6 +283,7 @@ const AddItemModal: React.FC<{
 
     try {
       await addItem(formData);
+      addRecentItem(formData.name);
       setFormData({
         name: '',
         category: 'other',
@@ -276,6 +292,7 @@ const AddItemModal: React.FC<{
         location: 'pantry',
         lowStockThreshold: 1,
       });
+      setShowSuggestions(false);
       onClose();
     } catch (error) {
       Alert.alert('Error', 'Failed to add item');
@@ -286,6 +303,9 @@ const AddItemModal: React.FC<{
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={[styles.modalContainer, { backgroundColor: theme.background }]}>
         <View style={styles.modalHeader}>
+          <Pressable onPress={handleSubmit}>
+            <Text style={[styles.headerAction, { color: theme.primary }]}>OK</Text>
+          </Pressable>
           <Text style={[styles.modalTitle, { color: theme.text }]}>Add Pantry Item</Text>
           <Pressable onPress={onClose}>
             <Text style={[styles.closeButton, { color: theme.primary }]}>✕</Text>
@@ -293,12 +313,45 @@ const AddItemModal: React.FC<{
         </View>
 
         <ScrollView style={styles.modalContent}>
-          <Input
-            label="Item Name"
-            value={formData.name}
-            onChangeText={(name) => setFormData({ ...formData, name })}
-            placeholder="e.g., Milk, Eggs, Bread"
-          />
+          <View style={styles.inputContainer}>
+            <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Item Name</Text>
+            <TextInput
+              style={[styles.textInput, {
+                backgroundColor: theme.backgroundSecondary,
+                color: theme.text,
+                borderColor: theme.borderLight
+              }]}
+              value={formData.name}
+              onChangeText={handleNameChange}
+              placeholder="e.g., Milk, Eggs, Bread"
+              placeholderTextColor={theme.textTertiary}
+              onFocus={() => {
+                const filtered = getSuggestions(formData.name, 8);
+                setSuggestions(filtered);
+                setShowSuggestions(filtered.length > 0);
+              }}
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <View style={[styles.suggestionsContainer, {
+                backgroundColor: theme.surface,
+                borderColor: theme.border
+              }]}>
+                <FlatList
+                  data={suggestions}
+                  keyExtractor={(item, index) => `${item}-${index}`}
+                  renderItem={({ item }) => (
+                    <Pressable
+                      onPress={() => handleSuggestionSelect(item)}
+                      style={[styles.suggestionItem, { borderBottomColor: theme.borderLight }]}
+                    >
+                      <Text style={[styles.suggestionText, { color: theme.text }]}>{item}</Text>
+                    </Pressable>
+                  )}
+                  scrollEnabled={false}
+                />
+              </View>
+            )}
+          </View>
 
           <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Category</Text>
           <View style={styles.optionsGrid}>
@@ -324,40 +377,67 @@ const AddItemModal: React.FC<{
             ))}
           </View>
 
-          <View style={styles.row}>
-            <View style={styles.halfWidth}>
-              <Input
-                label="Quantity"
-                value={String(formData.quantity)}
-                onChangeText={(q) => setFormData({ ...formData, quantity: Number(q) || 0 })}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={styles.halfWidth}>
-              <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Unit</Text>
-              <View style={styles.optionsRow}>
-                {UNITS.slice(0, 3).map((u) => (
-                  <Pressable
-                    key={u}
-                    onPress={() => setFormData({ ...formData, unit: u })}
-                    style={[
-                      styles.smallOptionButton,
-                      {
-                        backgroundColor: formData.unit === u ? theme.primary : theme.surface,
-                        borderColor: theme.border
-                      }
-                    ]}
-                  >
-                    <Text style={[
-                      styles.optionText,
-                      { color: formData.unit === u ? '#FFFFFF' : theme.textSecondary }
-                    ]}>
-                      {u}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Unit</Text>
+          <View style={styles.unitGrid}>
+            {UNITS.map((u) => (
+              <Pressable
+                key={u}
+                onPress={() => setFormData({ ...formData, unit: u })}
+                style={[
+                  styles.unitChipFullWidth,
+                  {
+                    backgroundColor: formData.unit === u ? theme.primary : theme.surface,
+                    borderColor: theme.border
+                  }
+                ]}
+              >
+                <Text style={[
+                  styles.unitChipText,
+                  { color: formData.unit === u ? '#FFFFFF' : theme.text }
+                ]}>
+                  {u}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+
+          <Text style={[styles.inputLabel, { color: theme.textSecondary, marginTop: spacing.md }]}>Quantity</Text>
+          <View style={[styles.quantityPickerContainer, {
+            backgroundColor: theme.backgroundSecondary,
+            borderColor: theme.borderLight
+          }]}>
+            <View style={[styles.quantityPickerHighlight, { borderColor: theme.border }]} />
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              snapToInterval={44}
+              decelerationRate="fast"
+              onScroll={(e) => {
+                const offsetY = e.nativeEvent.contentOffset.y;
+                const index = Math.round(offsetY / 44);
+                setFormData({ ...formData, quantity: index });
+              }}
+              scrollEventThrottle={16}
+              contentContainerStyle={styles.quantityPickerContent}
+            >
+              {Array.from({ length: 101 }, (_, i) => (
+                <Pressable
+                  key={i}
+                  onPress={() => setFormData({ ...formData, quantity: i })}
+                  style={styles.quantityPickerItem}
+                >
+                  <Text style={[
+                    styles.quantityPickerText,
+                    {
+                      color: formData.quantity === i ? theme.text : theme.textTertiary,
+                      fontSize: formData.quantity === i ? typography.h2 : typography.h4,
+                      fontWeight: formData.quantity === i ? typography.weightBold : typography.weightMedium,
+                    }
+                  ]}>
+                    {i}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
 
           <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Location</Text>
@@ -384,15 +464,25 @@ const AddItemModal: React.FC<{
             ))}
           </View>
 
-          <Input
-            label="Low Stock Threshold"
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Low Stock Threshold</Text>
+          <TextInput
+            style={[styles.textInput, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
             value={String(formData.lowStockThreshold)}
             onChangeText={(t) => setFormData({ ...formData, lowStockThreshold: Number(t) || 1 })}
             keyboardType="numeric"
           />
 
-          <Input
-            label="Notes (optional)"
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Notes (optional)</Text>
+          <TextInput
+            style={[styles.textInput, styles.textInputMultiline, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
             value={formData.notes || ''}
             onChangeText={(notes) => setFormData({ ...formData, notes })}
             multiline
@@ -400,14 +490,7 @@ const AddItemModal: React.FC<{
           />
         </ScrollView>
 
-        <View style={styles.modalFooter}>
-          <Button variant="outline" onPress={onClose} style={styles.modalButton}>
-            Cancel
-          </Button>
-          <Button onPress={handleSubmit} style={styles.modalButton}>
-            Add Item
-          </Button>
-        </View>
+        {null}
       </SafeAreaView>
     </Modal>
   );
@@ -477,6 +560,9 @@ const EditItemModal: React.FC<{
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={[styles.modalContainer, { backgroundColor: theme.background }]}>
         <View style={styles.modalHeader}>
+          <Pressable onPress={handleSubmit}>
+            <Text style={[styles.headerAction, { color: theme.primary }]}>OK</Text>
+          </Pressable>
           <Text style={[styles.modalTitle, { color: theme.text }]}>Edit Item</Text>
           <Pressable onPress={onClose}>
             <Text style={[styles.closeButton, { color: theme.primary }]}>✕</Text>
@@ -484,27 +570,59 @@ const EditItemModal: React.FC<{
         </View>
 
         <ScrollView style={styles.modalContent}>
-          <Input
-            label="Item Name"
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Item Name</Text>
+          <TextInput
+            style={[styles.textInput, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
             value={formData.name}
             onChangeText={(name) => setFormData({ ...formData, name })}
           />
 
-          <View style={styles.row}>
-            <View style={styles.halfWidth}>
-              <Input
-                label="Quantity"
-                value={String(formData.quantity)}
-                onChangeText={(q) => setFormData({ ...formData, quantity: Number(q) || 0 })}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={styles.halfWidth}>
-              <Button onPress={handleReplenish} style={{ marginTop: spacing.lg }}>
-                Replenish
-              </Button>
-            </View>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Quantity</Text>
+          <View style={[styles.quantityPickerContainer, {
+            backgroundColor: theme.backgroundSecondary,
+            borderColor: theme.borderLight
+          }]}>
+            <View style={[styles.quantityPickerHighlight, { borderColor: theme.border }]} />
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              snapToInterval={44}
+              decelerationRate="fast"
+              onScroll={(e) => {
+                const offsetY = e.nativeEvent.contentOffset.y;
+                const index = Math.round(offsetY / 44);
+                setFormData({ ...formData, quantity: index });
+              }}
+              scrollEventThrottle={16}
+              contentContainerStyle={styles.quantityPickerContent}
+            >
+              {Array.from({ length: 101 }, (_, i) => (
+                <Pressable
+                  key={i}
+                  onPress={() => setFormData({ ...formData, quantity: i })}
+                  style={styles.quantityPickerItem}
+                >
+                  <Text style={[
+                    styles.quantityPickerText,
+                    {
+                      color: formData.quantity === i ? theme.text : theme.textTertiary,
+                      fontSize: formData.quantity === i ? typography.h2 : typography.h4,
+                      fontWeight: formData.quantity === i ? typography.weightBold : typography.weightMedium,
+                    }
+                  ]}>
+                    {i}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
+
+          <Button onPress={handleReplenish} style={{ marginTop: spacing.md }} fullWidth>
+            Replenish Stock
+          </Button>
 
           <Text style={[styles.sectionLabel, { color: theme.textSecondary }]}>Location</Text>
           <View style={styles.optionsRow}>
@@ -530,8 +648,13 @@ const EditItemModal: React.FC<{
             ))}
           </View>
 
-          <Input
-            label="Notes"
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>Notes</Text>
+          <TextInput
+            style={[styles.textInput, styles.textInputMultiline, {
+              backgroundColor: theme.backgroundSecondary,
+              color: theme.text,
+              borderColor: theme.borderLight
+            }]}
             value={formData.notes}
             onChangeText={(notes) => setFormData({ ...formData, notes })}
             multiline
@@ -539,14 +662,7 @@ const EditItemModal: React.FC<{
           />
         </ScrollView>
 
-        <View style={styles.modalFooter}>
-          <Button variant="outline" onPress={onClose} style={styles.modalButton}>
-            Cancel
-          </Button>
-          <Button onPress={handleSubmit} style={styles.modalButton}>
-            Save Changes
-          </Button>
-        </View>
+        {null}
       </SafeAreaView>
     </Modal>
   );
@@ -707,9 +823,15 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: typography.h3,
     fontWeight: typography.weightBold,
+    flex: 1,
+    textAlign: 'center',
   },
   closeButton: {
     fontSize: 32,
+  },
+  headerAction: {
+    fontSize: typography.h3,
+    fontWeight: typography.weightSemibold,
   },
   modalContent: {
     flex: 1,
@@ -745,21 +867,22 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   optionButton: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderRadius: borderRadius.md,
     borderWidth: 1,
   },
   smallOptionButton: {
     flex: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
     borderRadius: borderRadius.md,
     borderWidth: 1,
     alignItems: 'center',
   },
   optionText: {
-    fontSize: typography.bodySmall,
+    fontSize: typography.body,
+    fontWeight: typography.weightMedium,
     textTransform: 'capitalize',
   },
   row: {
@@ -768,5 +891,91 @@ const styles = StyleSheet.create({
   },
   halfWidth: {
     flex: 1,
+  },
+  inputContainer: {
+    marginBottom: spacing.md,
+  },
+  inputLabel: {
+    fontSize: typography.bodySmall,
+    fontWeight: typography.weightMedium,
+    marginBottom: spacing.xs,
+  },
+  textInput: {
+    borderRadius: borderRadius.md,
+    padding: spacing.md,
+    fontSize: typography.body,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+  },
+  textInputMultiline: {
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  suggestionsContainer: {
+    borderWidth: 1,
+    borderRadius: borderRadius.md,
+    marginTop: -spacing.md,
+    marginBottom: spacing.md,
+    maxHeight: 200,
+  },
+  suggestionItem: {
+    padding: spacing.md,
+    borderBottomWidth: 1,
+  },
+  suggestionText: {
+    fontSize: typography.body,
+  },
+  unitGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  unitChipFullWidth: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    flexBasis: '22%',
+    minWidth: 70,
+    height: 50,
+  },
+  unitChipText: {
+    fontSize: typography.h4,
+    fontWeight: typography.weightBold,
+  },
+  quantityPickerContainer: {
+    height: 180,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: spacing.md,
+  },
+  quantityPickerHighlight: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+    height: 44,
+    marginTop: -22,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    zIndex: 1,
+    pointerEvents: 'none',
+  },
+  quantityPickerContent: {
+    paddingVertical: 68,
+  },
+  quantityPickerItem: {
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  quantityPickerText: {
+    textAlign: 'center',
   },
 });
