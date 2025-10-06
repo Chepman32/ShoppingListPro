@@ -35,6 +35,7 @@
   },
   "templates": {
     "title": "템플릿",
+    "subtitle": "반복되는 항목을 목록에 빠르게 추가하세요",
     "myTemplates": "내 템플릿",
     "predefinedTemplates": "기본 템플릿",
     "createNew": "새로 만들기",
@@ -43,11 +44,116 @@
     "items": "항목",
     "addToList": "쇼핑 목록에 추가"
   },
+  "home": {
+    "title": "ListFlow",
+    "yourLists": "내 목록",
+    "noLists": "아직 목록이 없습니다",
+    "createFirst": "+ 버튼을 눌러 첫 번째 목록을 만드세요",
+    "items": "항목",
+    "quickActions": {
+      "recents": "최근 항목",
+      "mealPlan": "식단 계획",
+      "cloudSync": "클라우드 동기화",
+      "pantry": "식료품 저장실",
+      "templates": "템플릿"
+    },
+    "actions": {
+      "archive": "보관",
+      "delete": "삭제",
+      "cancel": "취소"
+    }
+  },
   "lists": {
     "title": "내 목록",
     "newList": "새 목록",
     "noLists": "아직 목록이 없습니다",
     "createFirst": "+ 버튼을 눌러 첫 번째 목록을 만드세요"
+  },
+  "navigation": {
+    "lists": "목록",
+    "templates": "템플릿",
+    "premium": "프리미엄",
+    "more": "더보기"
+  },
+  "pantry": {
+    "title": "식료품 저장실",
+    "addItem": "식료품 추가",
+    "editItem": "항목 편집",
+    "noItems": "저장실에 항목이 없습니다",
+    "createFirst": "+ 버튼을 눌러 첫 번째 항목을 추가하세요",
+    "itemsExpiringSoon": "곧 만료될 항목",
+    "itemsRunningLow": "부족한 항목",
+    "filters": {
+      "all": "전체",
+      "expiring": "만료 예정",
+      "lowStock": "재고 부족"
+    },
+    "badges": {
+      "expired": "만료됨",
+      "expiringSoon": "곧 만료",
+      "lowStock": "부족"
+    },
+    "fields": {
+      "itemName": "항목 이름",
+      "itemNamePlaceholder": "예: 우유, 계란, 빵",
+      "category": "카테고리",
+      "unit": "단위",
+      "quantity": "수량",
+      "location": "위치",
+      "lowStockThreshold": "재고 부족 기준",
+      "notes": "메모",
+      "notesOptional": "메모 (선택사항)"
+    },
+    "locations": {
+      "fridge": "냉장고",
+      "pantry": "식료품 저장실",
+      "freezer": "냉동실"
+    },
+    "categories": {
+      "produce": "농산물",
+      "dairy": "유제품",
+      "meat": "육류",
+      "bakery": "베이커리",
+      "frozen": "냉동식품",
+      "pantry": "식료품",
+      "beverages": "음료",
+      "snacks": "스낵",
+      "other": "기타"
+    },
+    "units": {
+      "pcs": "개",
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "lb": "lb",
+      "oz": "oz",
+      "cup": "컵",
+      "tbsp": "큰술",
+      "tsp": "작은술"
+    },
+    "actions": {
+      "use": "사용",
+      "edit": "편집",
+      "delete": "삭제",
+      "replenish": "재고 보충"
+    },
+    "alerts": {
+      "deleteTitle": "항목 삭제",
+      "deleteMessage": "{{name}}을(를) 삭제하시겠습니까?",
+      "consumeTitle": "항목 사용",
+      "consumeMessage": "{{unit}}을(를) 얼마나 사용하시겠습니까?",
+      "replenishTitle": "재고 보충",
+      "replenishMessage": "얼마나 추가하시겠습니까?",
+      "errorTitle": "오류",
+      "errorAddItem": "항목을 추가하지 못했습니다",
+      "errorUpdateItem": "항목을 업데이트하지 못했습니다",
+      "errorNameRequired": "항목 이름을 입력하세요"
+    },
+    "expiry": {
+      "expiresIn": "{{days}}일 후 만료",
+      "expiredDaysAgo": "{{days}}일 전 만료됨"
+    }
   },
   "more": {
     "title": "더보기",
@@ -80,7 +186,14 @@
     "imagePickerUnavailable": "이미지 선택을 사용할 수 없습니다. 사진을 추가하려면 react-native-image-picker를 설치하고 앱을 다시 빌드하세요.",
     "lastUpdated": "마지막 업데이트",
     "chooseFromLibrary": "갤러리에서 선택",
-    "removeImage": "이미지 제거"
+    "removeImage": "이미지 제거",
+    "chooseImageSource": "이미지 소스 선택",
+    "searchPixabay": "Pixabay 검색",
+    "pixabaySearch": "Pixabay 이미지 검색",
+    "searchPlaceholder": "이미지 검색...",
+    "searchImages": "검색",
+    "noResults": "이미지를 찾을 수 없음",
+    "pixabayError": "Pixabay에서 이미지를 로드하지 못했습니다"
   },
   "favorites": {
     "noFavorites": "아직 즐겨찾기가 없습니다",

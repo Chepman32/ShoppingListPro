@@ -17,10 +17,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
 import { Input, Button } from '../../components/core';
+import { ImageSourceModal } from '../../components/ImageSourceModal';
+import { PixabaySearchModal } from '../../components/PixabaySearchModal';
 import { colors, spacing, typography, borderRadius } from '../../theme';
 import { useTranslation } from 'react-i18next';
 import { useFavoritesStore } from '../../stores';
 import { useRecentsStore } from '../../stores/recentsStore';
+import { database, ListItem } from '../../database';
 import type { FavoriteProductEntry } from '../../types/favorites';
 import type { RecentProductEntry } from '../../types/recents';
 import type {
@@ -203,6 +206,8 @@ export const ProductScreen = () => {
   const [newAttachmentType, setNewAttachmentType] = useState<ProductAttachmentType>('note');
   const [newAttachmentLabel, setNewAttachmentLabel] = useState('');
   const [newAttachmentValue, setNewAttachmentValue] = useState('');
+  const [isImageSourceModalVisible, setImageSourceModalVisible] = useState(false);
+  const [isPixabayModalVisible, setPixabayModalVisible] = useState(false);
 
   const favoriteIdRef = useRef<string>(
     params?.listItemId ??
@@ -291,13 +296,29 @@ export const ProductScreen = () => {
     resetAttachmentDraft();
   };
 
-  const saveProduct = () => {
-    setProduct({
+  const saveProduct = async () => {
+    const updatedProduct = {
       ...draft,
       lastUpdated: new Date().toISOString(),
-    });
+    };
+
+    setProduct(updatedProduct);
     setIsEditing(false);
     resetAttachmentDraft();
+
+    // Save image to list item if this product is from a list
+    if (contextListItemId && draft.imageUri !== product.imageUri) {
+      try {
+        await database.write(async () => {
+          const item = await database.get<ListItem>('list_items').find(contextListItemId);
+          await item.update((i) => {
+            i.imageUri = draft.imageUri;
+          });
+        });
+      } catch (error) {
+        console.error('Failed to save image to list item:', error);
+      }
+    }
   };
 
   const updateDraft = (updates: Partial<ProductDetails>) => {
@@ -381,21 +402,39 @@ export const ProductScreen = () => {
   const handleImagePress = () => {
     if (!isEditing) return;
 
-    const buttons: Array<{ text: string; style?: 'cancel' | 'destructive'; onPress?: () => void }>
-      = [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('product.chooseFromLibrary'), onPress: handleChooseImage },
-      ];
-
     if (draft.imageUri) {
-      buttons.push({
-        text: t('product.removeImage'),
-        style: 'destructive',
-        onPress: () => updateDraft({ imageUri: undefined }),
-      });
+      // If image exists, show remove option
+      Alert.alert(
+        t('product.productImage'),
+        t('product.updatePhoto'),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('product.chooseImageSource'), onPress: () => setImageSourceModalVisible(true) },
+          {
+            text: t('product.removeImage'),
+            style: 'destructive',
+            onPress: () => updateDraft({ imageUri: undefined }),
+          },
+        ]
+      );
+    } else {
+      // If no image, show image source modal directly
+      setImageSourceModalVisible(true);
     }
+  };
 
-    Alert.alert(t('product.productImage'), t('product.updatePhoto'), buttons);
+  const handleSelectGallery = () => {
+    setImageSourceModalVisible(false);
+    handleChooseImage();
+  };
+
+  const handleSelectPixabay = () => {
+    setImageSourceModalVisible(false);
+    setPixabayModalVisible(true);
+  };
+
+  const handleSelectPixabayImage = (imageUrl: string) => {
+    updateDraft({ imageUri: imageUrl });
   };
 
   const renderAttachment = (attachment: ProductAttachment, isDraft = false) => {
@@ -663,6 +702,20 @@ export const ProductScreen = () => {
           </View>
         </View>
       </Modal>
+
+      <ImageSourceModal
+        visible={isImageSourceModalVisible}
+        onClose={() => setImageSourceModalVisible(false)}
+        onSelectGallery={handleSelectGallery}
+        onSelectPixabay={handleSelectPixabay}
+      />
+
+      <PixabaySearchModal
+        visible={isPixabayModalVisible}
+        onClose={() => setPixabayModalVisible(false)}
+        onSelectImage={handleSelectPixabayImage}
+        productName={draft.name}
+      />
     </SafeAreaView>
   );
 };

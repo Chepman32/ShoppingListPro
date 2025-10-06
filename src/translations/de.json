@@ -35,6 +35,7 @@
   },
   "templates": {
     "title": "Vorlagen",
+    "subtitle": "Wiederkehrende Artikel schnell zu Ihren Listen hinzufügen",
     "myTemplates": "Meine Vorlagen",
     "predefinedTemplates": "Vordefinierte Vorlagen",
     "createNew": "Neu erstellen",
@@ -43,11 +44,116 @@
     "items": "Artikel",
     "addToList": "Zur Einkaufsliste hinzufügen"
   },
+  "home": {
+    "title": "ListFlow",
+    "yourLists": "Ihre Listen",
+    "noLists": "Noch keine Listen",
+    "createFirst": "Tippen Sie auf +, um Ihre erste Liste zu erstellen",
+    "items": "Artikel",
+    "quickActions": {
+      "recents": "Kürzlich",
+      "mealPlan": "Essensplan",
+      "cloudSync": "Cloud-Sync",
+      "pantry": "Vorratskammer",
+      "templates": "Vorlagen"
+    },
+    "actions": {
+      "archive": "Archivieren",
+      "delete": "Löschen",
+      "cancel": "Abbrechen"
+    }
+  },
   "lists": {
     "title": "Ihre Listen",
     "newList": "Neue Liste",
     "noLists": "Noch keine Listen",
     "createFirst": "Tippen Sie auf +, um Ihre erste Liste zu erstellen"
+  },
+  "navigation": {
+    "lists": "Listen",
+    "templates": "Vorlagen",
+    "premium": "Premium",
+    "more": "Mehr"
+  },
+  "pantry": {
+    "title": "Vorratskammer",
+    "addItem": "Vorrat hinzufügen",
+    "editItem": "Artikel bearbeiten",
+    "noItems": "Keine Artikel in der Vorratskammer",
+    "createFirst": "Tippen Sie auf +, um Ihren ersten Artikel hinzuzufügen",
+    "itemsExpiringSoon": "Artikel laufen bald ab",
+    "itemsRunningLow": "Artikel gehen zur Neige",
+    "filters": {
+      "all": "Alle",
+      "expiring": "Läuft ab",
+      "lowStock": "Niedriger Bestand"
+    },
+    "badges": {
+      "expired": "Abgelaufen",
+      "expiringSoon": "Bald",
+      "lowStock": "Niedrig"
+    },
+    "fields": {
+      "itemName": "Artikelname",
+      "itemNamePlaceholder": "z.B. Milch, Eier, Brot",
+      "category": "Kategorie",
+      "unit": "Einheit",
+      "quantity": "Menge",
+      "location": "Standort",
+      "lowStockThreshold": "Schwellenwert für niedrigen Bestand",
+      "notes": "Notizen",
+      "notesOptional": "Notizen (optional)"
+    },
+    "locations": {
+      "fridge": "Kühlschrank",
+      "pantry": "Vorratskammer",
+      "freezer": "Gefrierschrank"
+    },
+    "categories": {
+      "produce": "Obst und Gemüse",
+      "dairy": "Milchprodukte",
+      "meat": "Fleisch",
+      "bakery": "Backwaren",
+      "frozen": "Tiefkühlprodukte",
+      "pantry": "Vorrat",
+      "beverages": "Getränke",
+      "snacks": "Snacks",
+      "other": "Sonstiges"
+    },
+    "units": {
+      "pcs": "Stk",
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "lb": "lb",
+      "oz": "oz",
+      "cup": "Tasse",
+      "tbsp": "EL",
+      "tsp": "TL"
+    },
+    "actions": {
+      "use": "Verwenden",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "replenish": "Bestand auffüllen"
+    },
+    "alerts": {
+      "deleteTitle": "Artikel löschen",
+      "deleteMessage": "Sind Sie sicher, dass Sie {{name}} löschen möchten?",
+      "consumeTitle": "Artikel verwenden",
+      "consumeMessage": "Wie viel {{unit}} möchten Sie verwenden?",
+      "replenishTitle": "Bestand auffüllen",
+      "replenishMessage": "Wie viele möchten Sie hinzufügen?",
+      "errorTitle": "Fehler",
+      "errorAddItem": "Artikel konnte nicht hinzugefügt werden",
+      "errorUpdateItem": "Artikel konnte nicht aktualisiert werden",
+      "errorNameRequired": "Bitte geben Sie einen Artikelnamen ein"
+    },
+    "expiry": {
+      "expiresIn": "Läuft ab in {{days}} Tagen",
+      "expiredDaysAgo": "Abgelaufen vor {{days}} Tagen"
+    }
   },
   "more": {
     "title": "Mehr",
@@ -80,7 +186,14 @@
     "imagePickerUnavailable": "Bildauswahl nicht verfügbar. Installieren Sie react-native-image-picker und erstellen Sie die App neu, um Fotos hinzuzufügen.",
     "lastUpdated": "Zuletzt aktualisiert",
     "chooseFromLibrary": "Aus Galerie auswählen",
-    "removeImage": "Bild entfernen"
+    "removeImage": "Bild entfernen",
+    "chooseImageSource": "Bildquelle auswählen",
+    "searchPixabay": "Pixabay durchsuchen",
+    "pixabaySearch": "Pixabay Bilder suchen",
+    "searchPlaceholder": "Nach Bildern suchen...",
+    "searchImages": "Suchen",
+    "noResults": "Keine Bilder gefunden",
+    "pixabayError": "Fehler beim Laden von Bildern von Pixabay"
   },
   "favorites": {
     "noFavorites": "Noch keine Favoriten",

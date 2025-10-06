@@ -35,6 +35,7 @@
   },
   "templates": {
     "title": "Modèles",
+    "subtitle": "Ajoutez rapidement des articles récurrents à vos listes",
     "myTemplates": "Mes modèles",
     "predefinedTemplates": "Modèles prédéfinis",
     "createNew": "Créer nouveau",
@@ -43,11 +44,116 @@
     "items": "articles",
     "addToList": "Ajouter à la liste"
   },
+  "home": {
+    "title": "ListFlow",
+    "yourLists": "Vos listes",
+    "noLists": "Aucune liste",
+    "createFirst": "Appuyez sur + pour créer votre première liste",
+    "items": "articles",
+    "quickActions": {
+      "recents": "Récents",
+      "mealPlan": "Plan de repas",
+      "cloudSync": "Synchro Cloud",
+      "pantry": "Garde-manger",
+      "templates": "Modèles"
+    },
+    "actions": {
+      "archive": "Archiver",
+      "delete": "Supprimer",
+      "cancel": "Annuler"
+    }
+  },
   "lists": {
     "title": "Vos listes",
     "newList": "Nouvelle liste",
     "noLists": "Aucune liste",
     "createFirst": "Appuyez sur + pour créer votre première liste"
+  },
+  "navigation": {
+    "lists": "Listes",
+    "templates": "Modèles",
+    "premium": "Premium",
+    "more": "Plus"
+  },
+  "pantry": {
+    "title": "Garde-manger",
+    "addItem": "Ajouter un article",
+    "editItem": "Modifier l'article",
+    "noItems": "Aucun article dans le garde-manger",
+    "createFirst": "Appuyez sur + pour ajouter votre premier article",
+    "itemsExpiringSoon": "articles expirent bientôt",
+    "itemsRunningLow": "articles en rupture de stock",
+    "filters": {
+      "all": "Tous",
+      "expiring": "Expirant",
+      "lowStock": "Stock faible"
+    },
+    "badges": {
+      "expired": "Expiré",
+      "expiringSoon": "Bientôt",
+      "lowStock": "Faible"
+    },
+    "fields": {
+      "itemName": "Nom de l'article",
+      "itemNamePlaceholder": "ex. Lait, Œufs, Pain",
+      "category": "Catégorie",
+      "unit": "Unité",
+      "quantity": "Quantité",
+      "location": "Emplacement",
+      "lowStockThreshold": "Seuil de stock faible",
+      "notes": "Notes",
+      "notesOptional": "Notes (facultatif)"
+    },
+    "locations": {
+      "fridge": "Réfrigérateur",
+      "pantry": "Garde-manger",
+      "freezer": "Congélateur"
+    },
+    "categories": {
+      "produce": "Fruits et légumes",
+      "dairy": "Produits laitiers",
+      "meat": "Viande",
+      "bakery": "Boulangerie",
+      "frozen": "Surgelés",
+      "pantry": "Épicerie",
+      "beverages": "Boissons",
+      "snacks": "Collations",
+      "other": "Autre"
+    },
+    "units": {
+      "pcs": "pcs",
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "lb": "lb",
+      "oz": "oz",
+      "cup": "tasse",
+      "tbsp": "c. à s.",
+      "tsp": "c. à c."
+    },
+    "actions": {
+      "use": "Utiliser",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "replenish": "Réapprovisionner"
+    },
+    "alerts": {
+      "deleteTitle": "Supprimer l'article",
+      "deleteMessage": "Êtes-vous sûr de vouloir supprimer {{name}} ?",
+      "consumeTitle": "Consommer l'article",
+      "consumeMessage": "Combien de {{unit}} souhaitez-vous consommer ?",
+      "replenishTitle": "Réapprovisionner",
+      "replenishMessage": "Combien souhaitez-vous ajouter ?",
+      "errorTitle": "Erreur",
+      "errorAddItem": "Impossible d'ajouter l'article",
+      "errorUpdateItem": "Impossible de mettre à jour l'article",
+      "errorNameRequired": "Veuillez saisir un nom d'article"
+    },
+    "expiry": {
+      "expiresIn": "Expire dans {{days}} jours",
+      "expiredDaysAgo": "Expiré il y a {{days}} jours"
+    }
   },
   "more": {
     "title": "Plus",
@@ -80,7 +186,14 @@
     "imagePickerUnavailable": "La sélection d'images n'est pas disponible. Installez react-native-image-picker et reconstruisez l'application pour ajouter des photos.",
     "lastUpdated": "Dernière mise à jour",
     "chooseFromLibrary": "Choisir depuis la galerie",
-    "removeImage": "Supprimer l'image"
+    "removeImage": "Supprimer l'image",
+    "chooseImageSource": "Choisir la source de l'image",
+    "searchPixabay": "Rechercher sur Pixabay",
+    "pixabaySearch": "Recherche d'images Pixabay",
+    "searchPlaceholder": "Rechercher des images...",
+    "searchImages": "Rechercher",
+    "noResults": "Aucune image trouvée",
+    "pixabayError": "Échec du chargement des images depuis Pixabay"
   },
   "favorites": {
     "noFavorites": "Aucun favori",

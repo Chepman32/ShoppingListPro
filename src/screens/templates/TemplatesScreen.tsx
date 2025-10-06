@@ -12,9 +12,11 @@ import { Card } from '../../components/core';
 import { typography, spacing } from '../../theme';
 import { useTheme } from '../../ThemeContext';
 import { Template } from '../../types/database';
+import { useTranslation } from 'react-i18next';
 
 export const TemplatesScreen = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const { theme, themeMode } = useTheme();
   const { templates, loading, fetchTemplates, getPredefinedTemplates, getUserTemplates } =
     useTemplatesStore();
@@ -28,12 +30,12 @@ export const TemplatesScreen = () => {
 
   const sections = [
     {
-      title: 'My Templates',
+      title: t('templates.myTemplates'),
       data: userTemplates,
       isEmpty: userTemplates.length === 0,
     },
     {
-      title: 'Predefined Templates',
+      title: t('templates.predefinedTemplates'),
       data: predefinedTemplates,
     },
   ];
@@ -53,12 +55,12 @@ export const TemplatesScreen = () => {
           <Text style={[styles.templateName, { color: theme.textSecondary }]}>{item.name}</Text>
           {item.isPredefined && (
             <View style={[styles.badge, { backgroundColor: theme.primary + '20' }]}>
-              <Text style={[styles.badgeText, { color: theme.primary }]}>Built-in</Text>
+              <Text style={[styles.badgeText, { color: theme.primary }]}>{t('favorites.builtInTemplate')}</Text>
             </View>
           )}
         </View>
         <Text style={[styles.templateMeta, { color: theme.textTertiary }]}>
-          {item.items.length} {item.items.length === 1 ? 'item' : 'items'}
+          {item.items.length} {t('templates.items')}
         </Text>
       </Card>
     </TouchableOpacity>
@@ -75,9 +77,9 @@ export const TemplatesScreen = () => {
 
     return (
       <View style={styles.emptyState}>
-        <Text style={[styles.emptyText, { color: theme.textSecondary }]}>No custom templates yet</Text>
+        <Text style={[styles.emptyText, { color: theme.textSecondary }]}>{t('templates.noTemplates')}</Text>
         <TouchableOpacity onPress={handleCreatePress} style={[styles.emptyButton, { backgroundColor: theme.primary }]}>
-          <Text style={[styles.emptyButtonText, { color: theme.background }]}>Create your first template</Text>
+          <Text style={[styles.emptyButtonText, { color: theme.background }]}>{t('templates.createFirst')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -87,9 +89,9 @@ export const TemplatesScreen = () => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]} edges={['top']}>
       <StatusBar barStyle={themeMode === 'dark' || themeMode === 'mono' ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Templates</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('templates.title')}</Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Quick-add recurring items to your lists
+          {t('templates.subtitle')}
         </Text>
       </View>
 

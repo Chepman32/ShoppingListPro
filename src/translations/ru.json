@@ -35,6 +35,7 @@
   },
   "templates": {
     "title": "Шаблоны",
+    "subtitle": "Быстро добавляйте повторяющиеся товары в свои списки",
     "myTemplates": "Мои шаблоны",
     "predefinedTemplates": "Готовые шаблоны",
     "createNew": "Создать новый",
@@ -43,11 +44,116 @@
     "items": "товаров",
     "addToList": "Добавить в список покупок"
   },
+  "home": {
+    "title": "ListFlow",
+    "yourLists": "Ваши списки",
+    "noLists": "Пока нет списков",
+    "createFirst": "Нажмите +, чтобы создать свой первый список",
+    "items": "товаров",
+    "quickActions": {
+      "recents": "Недавние",
+      "mealPlan": "План питания",
+      "cloudSync": "Облачная синхронизация",
+      "pantry": "Кладовая",
+      "templates": "Шаблоны"
+    },
+    "actions": {
+      "archive": "Архивировать",
+      "delete": "Удалить",
+      "cancel": "Отмена"
+    }
+  },
   "lists": {
     "title": "Ваши списки",
     "newList": "Новый список",
     "noLists": "Пока нет списков",
     "createFirst": "Нажмите +, чтобы создать свой первый список"
+  },
+  "navigation": {
+    "lists": "Списки",
+    "templates": "Шаблоны",
+    "premium": "Премиум",
+    "more": "Ещё"
+  },
+  "pantry": {
+    "title": "Кладовая",
+    "addItem": "Добавить товар в кладовую",
+    "editItem": "Редактировать товар",
+    "noItems": "В кладовой нет товаров",
+    "createFirst": "Нажмите +, чтобы добавить свой первый товар",
+    "itemsExpiringSoon": "товаров скоро истекут",
+    "itemsRunningLow": "товаров заканчиваются",
+    "filters": {
+      "all": "Все",
+      "expiring": "Истекают",
+      "lowStock": "Мало запасов"
+    },
+    "badges": {
+      "expired": "Истекло",
+      "expiringSoon": "Скоро",
+      "lowStock": "Мало"
+    },
+    "fields": {
+      "itemName": "Название товара",
+      "itemNamePlaceholder": "например, Молоко, Яйца, Хлеб",
+      "category": "Категория",
+      "unit": "Единица",
+      "quantity": "Количество",
+      "location": "Место хранения",
+      "lowStockThreshold": "Порог низкого запаса",
+      "notes": "Заметки",
+      "notesOptional": "Заметки (необязательно)"
+    },
+    "locations": {
+      "fridge": "Холодильник",
+      "pantry": "Кладовая",
+      "freezer": "Морозилка"
+    },
+    "categories": {
+      "produce": "Овощи и фрукты",
+      "dairy": "Молочные продукты",
+      "meat": "Мясо",
+      "bakery": "Хлебобулочные изделия",
+      "frozen": "Замороженные продукты",
+      "pantry": "Бакалея",
+      "beverages": "Напитки",
+      "snacks": "Закуски",
+      "other": "Другое"
+    },
+    "units": {
+      "pcs": "шт",
+      "kg": "кг",
+      "g": "г",
+      "l": "л",
+      "ml": "мл",
+      "lb": "фунт",
+      "oz": "унция",
+      "cup": "чашка",
+      "tbsp": "ст. л.",
+      "tsp": "ч. л."
+    },
+    "actions": {
+      "use": "Использовать",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "replenish": "Пополнить запас"
+    },
+    "alerts": {
+      "deleteTitle": "Удалить товар",
+      "deleteMessage": "Вы уверены, что хотите удалить {{name}}?",
+      "consumeTitle": "Использовать товар",
+      "consumeMessage": "Сколько {{unit}} вы хотите использовать?",
+      "replenishTitle": "Пополнить запас",
+      "replenishMessage": "Сколько вы хотите добавить?",
+      "errorTitle": "Ошибка",
+      "errorAddItem": "Не удалось добавить товар",
+      "errorUpdateItem": "Не удалось обновить товар",
+      "errorNameRequired": "Пожалуйста, введите название товара"
+    },
+    "expiry": {
+      "expiresIn": "Истекает через {{days}} дней",
+      "expiredDaysAgo": "Истекло {{days}} дней назад"
+    }
   },
   "more": {
     "title": "Ещё",
@@ -80,7 +186,14 @@
     "imagePickerUnavailable": "Выбор изображения недоступен. Установите react-native-image-picker и пересоберите приложение, чтобы добавлять фото.",
     "lastUpdated": "Последнее обновление",
     "chooseFromLibrary": "Выбрать из галереи",
-    "removeImage": "Удалить изображение"
+    "removeImage": "Удалить изображение",
+    "chooseImageSource": "Выбрать источник изображения",
+    "searchPixabay": "Поиск в Pixabay",
+    "pixabaySearch": "Поиск изображений Pixabay",
+    "searchPlaceholder": "Поиск изображений...",
+    "searchImages": "Поиск",
+    "noResults": "Изображения не найдены",
+    "pixabayError": "Не удалось загрузить изображения из Pixabay"
   },
   "favorites": {
     "noFavorites": "Пока нет избранного",

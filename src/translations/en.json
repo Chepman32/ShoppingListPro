@@ -35,6 +35,7 @@
   },
   "templates": {
     "title": "Templates",
+    "subtitle": "Quick-add recurring items to your lists",
     "myTemplates": "My Templates",
     "predefinedTemplates": "Predefined Templates",
     "createNew": "Create New",
@@ -185,7 +186,14 @@
     "imagePickerUnavailable": "Image selection is unavailable. Install react-native-image-picker and rebuild the app to add photos.",
     "lastUpdated": "Last updated",
     "chooseFromLibrary": "Choose from Gallery",
-    "removeImage": "Remove Image"
+    "removeImage": "Remove Image",
+    "chooseImageSource": "Choose Image Source",
+    "searchPixabay": "Search Pixabay",
+    "pixabaySearch": "Search Pixabay Images",
+    "searchPlaceholder": "Search for images...",
+    "searchImages": "Search",
+    "noResults": "No images found",
+    "pixabayError": "Failed to load images from Pixabay"
   },
   "favorites": {
     "noFavorites": "No favorites yet",
