@@ -138,7 +138,7 @@ export const SettingsScreen = () => {
                 value={hapticsEnabled}
                 onValueChange={toggleHaptics}
                 trackColor={{ false: currentTheme.borderLight, true: currentTheme.primary }}
-                thumbColor={hapticsEnabled ? currentTheme.primary : currentTheme.border}
+                thumbColor="#FFFFFF"
               />
             </View>
             <View style={[styles.divider, { backgroundColor: currentTheme.borderLight }]} />
@@ -150,7 +150,7 @@ export const SettingsScreen = () => {
                 value={soundEnabled}
                 onValueChange={toggleSound}
                 trackColor={{ false: currentTheme.borderLight, true: currentTheme.primary }}
-                thumbColor={soundEnabled ? currentTheme.primary : currentTheme.border}
+                thumbColor="#FFFFFF"
               />
             </View>
           </Card>
@@ -320,6 +320,8 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     fontSize: typography.body,
+    flex: 1,
+    marginRight: spacing.md,
   },
   settingValue: {
     fontSize: typography.body,
