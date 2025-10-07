@@ -31,9 +31,9 @@ import { useTheme } from '../ThemeContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const createIcon = (iconName: string) =>
-  ({ color, size }: { color: string; size: number }) => (
-    <Icon name={iconName} size={size} color={color} />
+const createIcon = (iconName: string, focusedIconName?: string) =>
+  ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
+    <Icon name={focused ? (focusedIconName || iconName) : iconName} size={size} color={color} />
   );
 
 const baseStackScreenOptions: StackNavigationOptions = {
@@ -182,7 +182,7 @@ export const AppNavigator = () => {
         component={ListsStack}
         options={{
           tabBarLabel: t('navigation.lists'),
-          tabBarIcon: createIcon('list-outline'),
+          tabBarIcon: createIcon('list-outline', 'list'),
         }}
       />
       <Tab.Screen
@@ -190,7 +190,7 @@ export const AppNavigator = () => {
         component={TemplatesStack}
         options={{
           tabBarLabel: t('navigation.templates'),
-          tabBarIcon: createIcon('clipboard-outline'),
+          tabBarIcon: createIcon('clipboard-outline', 'clipboard'),
         }}
       />
       <Tab.Screen
@@ -198,7 +198,7 @@ export const AppNavigator = () => {
         component={MoreStack}
         options={{
           tabBarLabel: t('navigation.premium'),
-          tabBarIcon: createIcon('diamond-outline'),
+          tabBarIcon: createIcon('diamond-outline', 'diamond'),
         }}
       />
       <Tab.Screen
@@ -206,7 +206,7 @@ export const AppNavigator = () => {
         component={MoreStack}
         options={{
           tabBarLabel: t('navigation.more'),
-          tabBarIcon: createIcon('ellipsis-horizontal'),
+          tabBarIcon: createIcon('ellipsis-horizontal', 'ellipsis-horizontal'),
         }}
       />
     </Tab.Navigator>
