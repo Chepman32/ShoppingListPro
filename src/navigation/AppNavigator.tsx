@@ -4,11 +4,11 @@
  */
 
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import type { StackNavigationOptions } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { HomeScreen } from '../screens/lists/HomeScreen';
 import { ListDetailScreen } from '../screens/lists/ListDetailScreen';
 import { CreateListScreen } from '../screens/lists/CreateListScreen';
@@ -31,11 +31,9 @@ import { useTheme } from '../ThemeContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const createEmojiIcon = (emoji: string) =>
-  ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
-    <Text style={[styles.tabIcon, { color, fontSize: size, opacity: focused ? 1 : 0.6 }]}>
-      {emoji}
-    </Text>
+const createIcon = (iconName: string) =>
+  ({ color, size }: { color: string; size: number }) => (
+    <Icon name={iconName} size={size} color={color} />
   );
 
 const baseStackScreenOptions: StackNavigationOptions = {
@@ -184,7 +182,7 @@ export const AppNavigator = () => {
         component={ListsStack}
         options={{
           tabBarLabel: t('navigation.lists'),
-          tabBarIcon: createEmojiIcon('📝'),
+          tabBarIcon: createIcon('list-outline'),
         }}
       />
       <Tab.Screen
@@ -192,7 +190,7 @@ export const AppNavigator = () => {
         component={TemplatesStack}
         options={{
           tabBarLabel: t('navigation.templates'),
-          tabBarIcon: createEmojiIcon('📋'),
+          tabBarIcon: createIcon('clipboard-outline'),
         }}
       />
       <Tab.Screen
@@ -200,7 +198,7 @@ export const AppNavigator = () => {
         component={MoreStack}
         options={{
           tabBarLabel: t('navigation.premium'),
-          tabBarIcon: createEmojiIcon('👑'),
+          tabBarIcon: createIcon('diamond-outline'),
         }}
       />
       <Tab.Screen
@@ -208,15 +206,9 @@ export const AppNavigator = () => {
         component={MoreStack}
         options={{
           tabBarLabel: t('navigation.more'),
-          tabBarIcon: createEmojiIcon('⋯'),
+          tabBarIcon: createIcon('ellipsis-horizontal'),
         }}
       />
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  tabIcon: {
-    textAlign: 'center',
-  },
-});
